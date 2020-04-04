@@ -9,6 +9,8 @@ public:
     /* Scene Globals */
     /* ------------- */
     float window_width, window_height;
+    float room_width = 50*Unit;
+    float room_height = 25*Unit;
 
     /* Models */
     Model *mGround;
@@ -38,33 +40,40 @@ public:
         /* Modelling */
         // Floor Model
         mFloor = CreateModelPrimitive(PLANE, NULL);
-        mFloor->ScaleModel(glm::vec3(50*Unit, 1.0f, 50*Unit));
+        mFloor->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
+
         // Ceiling Model
         mCeiling = CreateModelPrimitive(PLANE, NULL);
-        mCeiling->ScaleModel(glm::vec3(50*Unit, 1.0f, 50*Unit));
+        mCeiling->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
         mCeiling->RotateModel(glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mCeiling->TranslateModel(glm::vec3(0.0f, 50*Unit, 0.0f));
+        mCeiling->TranslateModel(glm::vec3(0.0f, room_width, 0.0f));
+        mCeiling->SetModelTexture("res/textures/white-painted-ceiling-texture.jpg");
+
         // Left Wall Model
         mLeftWall = CreateModelPrimitive(PLANE, NULL);
-        mLeftWall->ScaleModel(glm::vec3(25*Unit, 1.0f, 50*Unit));
+        mLeftWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
         mLeftWall->RotateModel(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mLeftWall->TranslateModel(glm::vec3(-50*Unit, 25*Unit, 0.0f));
+        mLeftWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        mLeftWall->TranslateModel(glm::vec3(-room_width, room_height, 0.0f));
 
         // Right Wall Model
         mRightWall = CreateModelPrimitive(PLANE, NULL);
-        mRightWall->ScaleModel(glm::vec3(25*Unit, 1.0f, 50*Unit));
+        mRightWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
         mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mRightWall->TranslateModel(glm::vec3(50*Unit, 25*Unit, 0.0f));
+        mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        mRightWall->TranslateModel(glm::vec3(room_width, room_height, 0.0f));
+
         // Far Wall Model
         mFarWall = CreateModelPrimitive(PLANE, NULL);
-        mFarWall->ScaleModel(glm::vec3(50*Unit, 1.0f, 25*Unit));
+        mFarWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
         mFarWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mFarWall->TranslateModel(glm::vec3(0.0f,25*Unit, -50*Unit));
+        mFarWall->TranslateModel(glm::vec3(0.0f,room_height, -room_width));
+
         // Near Wall Model
         mNearWall = CreateModelPrimitive(PLANE, NULL);
-        mNearWall->ScaleModel(glm::vec3(50*Unit, 1.0f, 25*Unit));
+        mNearWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
         mNearWall->RotateModel(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mNearWall->TranslateModel(glm::vec3(0.0f, 25*Unit, 50*Unit));
+        mNearWall->TranslateModel(glm::vec3(0.0f, room_height, room_width));
 
         // Axis Models
         mAxisX = CreateModelPrimitive(CUBE, NULL);
