@@ -38,33 +38,33 @@ public:
         /* Modelling */
         // Floor Model
         mFloor = CreateModelPrimitive(PLANE, NULL);
-        mFloor->ScaleModel(glm::vec3(50*Unit, 0.0f, 50*Unit));
+        mFloor->ScaleModel(glm::vec3(50*Unit, 1.0f, 50*Unit));
         // Ceiling Model
         mCeiling = CreateModelPrimitive(PLANE, NULL);
-        mCeiling->ScaleModel(glm::vec3(50*Unit, 0.0f, 50*Unit));
+        mCeiling->ScaleModel(glm::vec3(50*Unit, 1.0f, 50*Unit));
         mCeiling->RotateModel(glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mCeiling->TranslateModel(glm::vec3(0.0f, 50*Unit, 0.0f));
         // Left Wall Model
         mLeftWall = CreateModelPrimitive(PLANE, NULL);
-        mLeftWall->ScaleModel(glm::vec3(50*Unit, 0.0f, 50*Unit));
+        mLeftWall->ScaleModel(glm::vec3(25*Unit, 1.0f, 50*Unit));
         mLeftWall->RotateModel(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mLeftWall->TranslateModel(glm::vec3(-50*Unit, 0.0f, 0.0f));
+        mLeftWall->TranslateModel(glm::vec3(-50*Unit, 25*Unit, 0.0f));
 
         // Right Wall Model
         mRightWall = CreateModelPrimitive(PLANE, NULL);
-        mRightWall->ScaleModel(glm::vec3(50*Unit, 0.0f, 50*Unit));
+        mRightWall->ScaleModel(glm::vec3(25*Unit, 1.0f, 50*Unit));
         mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mRightWall->TranslateModel(glm::vec3(50*Unit, 0.0f, 0.0f));
+        mRightWall->TranslateModel(glm::vec3(50*Unit, 25*Unit, 0.0f));
         // Far Wall Model
         mFarWall = CreateModelPrimitive(PLANE, NULL);
-        mFarWall->ScaleModel(glm::vec3(50*Unit, 0.0f, 50*Unit));
+        mFarWall->ScaleModel(glm::vec3(50*Unit, 1.0f, 25*Unit));
         mFarWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mFarWall->TranslateModel(glm::vec3(0.0f, 0.0f, -50*Unit));
+        mFarWall->TranslateModel(glm::vec3(0.0f,25*Unit, -50*Unit));
         // Near Wall Model
         mNearWall = CreateModelPrimitive(PLANE, NULL);
-        mNearWall->ScaleModel(glm::vec3(50*Unit, 0.0f, 50*Unit));
+        mNearWall->ScaleModel(glm::vec3(50*Unit, 1.0f, 25*Unit));
         mNearWall->RotateModel(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mNearWall->TranslateModel(glm::vec3(0.0f, 0.0f, 50*Unit));
+        mNearWall->TranslateModel(glm::vec3(0.0f, 25*Unit, 50*Unit));
 
         // Axis Models
         mAxisX = CreateModelPrimitive(CUBE, NULL);
