@@ -6,7 +6,7 @@ Geometry* Primitive::Plane(void)
 {
     Geometry* Plane = new Geometry();
     std::vector<glm::vec3> vertices = std::vector<glm::vec3>();
-    std::vector<unsigned int> indices = std::vector<unsigned int>();
+    std::vector<int> indices = std::vector<int>();
     std::vector<glm::vec3> normals = std::vector<glm::vec3>();
     std::vector<glm::vec2> texture_coordinates = std::vector<glm::vec2>();
 
@@ -46,7 +46,7 @@ Geometry* Primitive::Cube(void)
 {
     Geometry* Cube = new Geometry();
     std::vector<glm::vec3> vertices = std::vector<glm::vec3>();
-    std::vector<unsigned int> indices = std::vector<unsigned int>();
+    std::vector<int> indices = std::vector<int>();
     std::vector<glm::vec3> normals = std::vector<glm::vec3>();
     std::vector<glm::vec2> texture_coordinates = std::vector<glm::vec2>();
     // Cube Primitive
@@ -193,7 +193,7 @@ Geometry* Primitive::Sphere(unsigned int sectors, unsigned int stacks)
 {
     Geometry* Sphere = new Geometry();
     std::vector<glm::vec3> vertices = std::vector<glm::vec3>();
-    std::vector<unsigned int> indices = std::vector<unsigned int>();
+    std::vector<int> indices = std::vector<int>();
     std::vector<glm::vec3> normals = std::vector<glm::vec3>();
     std::vector<glm::vec2> texture_coordinates = std::vector<glm::vec2>();
 
@@ -267,6 +267,34 @@ Geometry* Primitive::Sphere(unsigned int sectors, unsigned int stacks)
     Sphere->Activate();
 
     return Sphere;
+}
+
+Geometry* Primitive::Line(void)
+{
+    Geometry* Line = new Geometry();
+    std::vector<glm::vec3> vertices = std::vector<glm::vec3>();
+    std::vector<int> indices = std::vector<int>();
+    std::vector<glm::vec3> normals = std::vector<glm::vec3>();
+    std::vector<glm::vec2> texture_coordinates = std::vector<glm::vec2>();
+
+    vertices.push_back(glm::vec3(0.0f, 0.0f, 0.0f)); // 0
+    normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    texture_coordinates.push_back(glm::vec2(0.0f, 0.0f));
+
+    vertices.push_back(glm::vec3(Unit, 0.0f, 0.0f)); // 1
+    normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    texture_coordinates.push_back(glm::vec2(Unit, 0.0f));
+
+    indices.push_back(0);
+    indices.push_back(1);
+
+    Line->SetVertices(vertices);
+    Line->SetIndices(indices);
+    Line->SetNormals(normals);
+    Line->SetTextureCoordinates(texture_coordinates);
+    Line->Activate();
+
+    return Line;
 }
 
 // Geometry* Primitive::InitializeGrid(void)

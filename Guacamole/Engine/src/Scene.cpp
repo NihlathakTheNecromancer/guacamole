@@ -8,6 +8,7 @@ Scene::Scene(void)
     primitive_plane = prim.Plane();
     primitive_cube = prim.Cube();
     primitive_sphere = prim.Sphere(100,100);
+    primitive_line = prim.Line();
 }
 
 Model* Scene::CreateModelPrimitive(PrimitiveType type, Model* parent)
@@ -25,6 +26,9 @@ Model* Scene::CreateModelPrimitive(PrimitiveType type, Model* parent)
             break;
         case SPHERE:
             newModel = new Model(primitive_sphere, this, parent);
+            break;
+        case LINE:
+            newModel = new Model(primitive_line, this, parent);
             break;
     };
     /* Set default shader program */
@@ -103,9 +107,14 @@ float Scene::GetCameraPitch(void)
     return camera_pitch;
 }
 
-glm::vec3 Scene::GetSceneLightPosition(void)
+glm::vec3 Scene::GetSceneLightPositionOne(void)
 {
-    return light_position;
+    return light_position_one;
+}
+
+glm::vec3 Scene::GetSceneLightPositionTwo(void)
+{
+    return light_position_two;
 }
 
 glm::mat4 Scene::GetCameraViewMatrix(void)
@@ -123,9 +132,14 @@ void Scene::SetSceneShaderProgram(ShaderProgram* shader)
     scene_shader_program = shader;
 }
 
-void Scene::SetSceneLightPosition(glm::vec3 position)
+void Scene::SetSceneLightPositionOne(glm::vec3 position)
 {
-    light_position = position;
+    light_position_one = position;
+}
+
+void Scene::SetSceneLightPositionTwo(glm::vec3 position)
+{
+    light_position_two = position;
 }
 
 void Scene::TranslateCameraRight(float distance)
