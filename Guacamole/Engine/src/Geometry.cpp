@@ -6,7 +6,7 @@ void Geometry::SetVertices(std::vector<glm::vec3> vs)
     vertices = vs;
 }
 
-void Geometry::SetIndices(std::vector<unsigned int> is)
+void Geometry::SetIndices(std::vector<int> is)
 {
     indices = is;
 }

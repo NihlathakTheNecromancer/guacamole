@@ -7,7 +7,8 @@ enum PrimitiveType
 {
     PLANE   = 0,
     CUBE    = 1,
-    SPHERE  = 2
+    SPHERE  = 2,
+    LINE    = 3
 };
 
 class Primitive
@@ -20,6 +21,7 @@ public:
     Geometry* Plane(void);
     Geometry* Cube(void);
     Geometry* Sphere(unsigned int sectors, unsigned int stacks);
+    Geometry* Line(void);
 };
 
 #endif /* _PRIMITIVES_H */

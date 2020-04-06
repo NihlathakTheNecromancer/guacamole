@@ -31,7 +31,8 @@ protected:
     float        camera_pitch;          // Camera Pitch angle
 
     /* Lighting */
-    glm::vec3    light_position;        // Position of scene light
+    glm::vec3    light_position_one;        // Position of scene light One
+    glm::vec3    light_position_two;        // Position of scene light Two
 
     /* Matrices */
     glm::mat4    view_matrix;
@@ -75,16 +76,18 @@ public:
 
 
     /* Lighting */
-    glm::vec3       GetSceneLightPosition(void);
-    void            SetSceneLightPosition(glm::vec3 position);
+    glm::vec3       GetSceneLightPositionOne(void);
+    void            SetSceneLightPositionOne(glm::vec3 position);
+    glm::vec3       GetSceneLightPositionTwo(void);
+    void            SetSceneLightPositionTwo(glm::vec3 position);
     
 
     /* Create */
     Geometry*       primitive_plane;
     Geometry*       primitive_cube;
     Geometry*       primitive_sphere;
+    Geometry*       primitive_line;
     Model*          CreateModelPrimitive(PrimitiveType type, Model* parent);
-    /*void          CreateModelOBJ(std::string obj_path); */
     
     /* Draw */
     void            DrawScene(void);

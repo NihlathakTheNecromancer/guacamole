@@ -43,6 +43,7 @@ public:
 
     unsigned int render_mode = GL_TRIANGLES;
     bool textures_enabled = false;
+    bool transparency_enabled = false;
 
     /* Shader */
     ShaderProgram* model_shader_program;
@@ -56,6 +57,7 @@ public:
     void SetModelFragmentColour(glm::vec4 c);
     void SetModelTexture(const std::string& path);
     void SetModelRenderMode(unsigned int m);
+    void SetModelTransparency(bool isTransparent);
 
     /* Model Transformations */
     void TranslateModel(glm::vec3 translation);

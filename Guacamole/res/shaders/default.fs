@@ -10,8 +10,8 @@ uniform sampler2D 	u_texture;
 uniform sampler2D	shadow_map;
 uniform bool		is_textured;
 uniform vec4 		fragment_colour = vec4(1.0f);
-uniform float 		ambient_light_intensity = 0.1f;
-uniform vec3		light_position;
+uniform float 		ambient_light_intensity = 0.7f;
+uniform vec3		light_position_one;
 uniform vec3		camera_position;
 
 float CalculateShadow()
@@ -30,11 +30,11 @@ float CalculateShadow()
 void main()
 {
 	vec3 	Normal = normalize(normal);
-	vec3 	light_direction = normalize(light_position - fragment_position);
+	vec3 	light_direction = normalize(light_position_one - fragment_position);
 	vec3	view_direction	= normalize(camera_position - fragment_position);
 	vec3	reflection_direction = reflect(-light_direction, Normal);
 	float 	diffuse_light_intensity = max(dot(Normal, light_direction), 0.0f);
-	float	specular_light_intensity = 0.2f * pow(max(dot(Normal, reflection_direction), 0.0f), 32.0f);
+	float	specular_light_intensity = 0.1f * pow(max(dot(Normal, reflection_direction), 0.0f), 32.0f);
 	//float	shadow = CalculateShadow();
 	float	shadow = 1.0;
 
@@ -42,6 +42,7 @@ void main()
 	{
 		vec4 	texture_colour = texture(u_texture, UV);
 		pixel_colour = (shadow * (diffuse_light_intensity + specular_light_intensity) + ambient_light_intensity) * texture_colour;
+		pixel_colour = glm::vec4(glm::vec3(pixel_colour), 1.0f);
 	}
 	else
 	{

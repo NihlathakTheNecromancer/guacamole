@@ -19,6 +19,11 @@ Model::Model(Geometry* g, Scene* s, Model* p)
         parent->AddChild(this);
 }
 
+void Model::SetModelTransparency(bool isTransparent)
+{
+    transparency_enabled = true;
+}
+
 void Model::SetModelShaderProgram(ShaderProgram* shader)
 {
     model_shader_program = shader;
@@ -209,8 +214,11 @@ void Model::BindUniforms(void)
     uniformLocation = glGetUniformLocation(model_shader_program->id, "camera_position");
     glUniform4fv(uniformLocation, 1, &scene->GetCameraPosition()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPosition()[0]);
+    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_one");
+    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionOne()[0]);
+
+    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_Two");
+    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionTwo()[0]);
 
     uniformLocation = glGetUniformLocation(model_shader_program->id, "fragment_colour");
     glUniform4fv(uniformLocation, 1, &fragment_colour[0]);
@@ -229,6 +237,7 @@ void Model::Draw(void)
 {
     glUseProgram(model_shader_program->id);
     if(textures_enabled) texture->Bind(1);
+    if(transparency_enabled) glEnable(GL_BLEND);
     BindUniforms();
 
     glBindVertexArray(geometry->vao);
@@ -237,6 +246,7 @@ void Model::Draw(void)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    if(transparency_enabled) glDisable(GL_BLEND);
     if(textures_enabled) texture->Unbind();
     glUseProgram(0);
 }

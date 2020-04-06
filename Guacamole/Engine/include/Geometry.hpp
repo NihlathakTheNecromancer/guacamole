@@ -17,7 +17,7 @@ class Geometry
 {
 public:
     void SetVertices(std::vector<glm::vec3> vs);
-    void SetIndices(std::vector<unsigned int> is);
+    void SetIndices(std::vector<int> is);
     void SetNormals(std::vector<glm::vec3> ns);
     void SetTextureCoordinates(std::vector<glm::vec2> uvs);
     void Activate();
@@ -26,7 +26,7 @@ public:
     unsigned int ibo;
     unsigned int vao;
     std::vector<glm::vec3> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<int> indices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texture_coordinates;
 
