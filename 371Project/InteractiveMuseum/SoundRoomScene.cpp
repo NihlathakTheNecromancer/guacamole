@@ -20,7 +20,7 @@ public:
 
     /* Defining Shaders 
     --------------------------------*/
-    ShaderProgram* scene_shader_program = new ShaderProgram("C:/res/shaders/default.fs","C:/res/shaders/default.vs");
+    ShaderProgram* scene_shader_program = new ShaderProgram("./res/shaders/default.fs","./res/shaders/default.vs");
 
     /* Constructor */
     SoundRoomScene(float windowWidth, float windowHeight)
@@ -47,7 +47,7 @@ public:
         mCeiling->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
         mCeiling->RotateModel(glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mCeiling->TranslateModel(glm::vec3(0.0f, room_width, 0.0f));
-        mCeiling->SetModelTexture("C:/res/textures/white-painted-ceiling-texture.jpg");
+        mCeiling->SetModelTexture("./res/textures/white-painted-ceiling-texture.jpg");
 
         // Left Wall Model
         mLeftWall = CreateModelPrimitive(PLANE, NULL);

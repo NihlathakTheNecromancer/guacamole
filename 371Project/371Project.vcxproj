@@ -117,13 +117,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\ThirdParty\glew-2.1.0\include;C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\ThirdParty\glfw-3.3\include;C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\ThirdParty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\include;$(ProjectDir)ThirdParty\glfw-3.3\include;$(ProjectDir)ThirdParty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\ThirdParty\glew-2.1.0\lib\win32;C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\ThirdParty\glfw-3.3\lib\win32\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\lib\win32;$(ProjectDir)ThirdParty\glfw-3.3\lib\win32\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

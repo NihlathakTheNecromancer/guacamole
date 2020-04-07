@@ -1,6 +1,6 @@
 
 #include <GL/glew.h>
-#include "C:/Users/Arturo/Desktop/371project/371VisualStudio/371Project/Dependencies/include/stb_image/stb_image.h"
+#include "../../Dependencies/include/stb_image/stb_image.h"
 #include "../include/Texture.hpp"
 
 Texture::Texture(const std::string& path)

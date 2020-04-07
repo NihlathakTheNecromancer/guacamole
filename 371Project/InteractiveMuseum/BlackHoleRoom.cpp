@@ -18,9 +18,9 @@ public:
     float spinningAngleZ = 1.0f;
 
     //From https://www.solarsystemscope.com/textures/
-    std::string stars = "C:/res/textures/2k_stars.jpg";
+    std::string stars = "./res/textures/2k_stars.jpg";
     //std::string door = "C:/res/textures/door.jpg";
-    std::string tex = "C:/res/shaders/";
+    std::string tex = "./res/shaders/";
 
     /* Models */
     Model* mGround;
