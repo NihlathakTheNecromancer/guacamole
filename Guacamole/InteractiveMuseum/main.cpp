@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
 #include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
 
-#include "SoundRoomScene.cpp"
+#include "ArtifactRoomScene.cpp"
 
 // Function prototypes
 void CameraController(GLFWwindow* window, Scene* currentScene, float dt);
@@ -47,7 +47,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
     // Create Window and rendering context using GLFW, resolution is 800x600
-    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Comp371 - Assignment 2 - Christian Galante", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "GUACAMOLE", NULL, NULL);
     if (window == NULL)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -86,9 +86,9 @@ int main()
     float lastButtonTime = 0.0f;
     
     /* Scene Initialization */
-    SoundRoomScene* DefaultRoom = new SoundRoomScene(window_width, window_height);
-    DefaultRoom->Initialize();
-    currentScene = DefaultRoom;
+    ArtifactRoomScene* ArtifactRoom = new ArtifactRoomScene(window_width, window_height);
+    ArtifactRoom->Initialize();
+    currentScene = ArtifactRoom;
 
     /* Initialize Cursor */
     glfwSetCursorPos(window, window_width/2, window_height/2);
@@ -99,9 +99,11 @@ int main()
 		dt = glfwGetTime() - lastFrameTime;
 		lastFrameTime += dt;
 
+        currentScene->InputController(window);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        DefaultRoom->Update(dt);
+        currentScene->Update(dt);
 
         /* Input */
         CameraController(window, currentScene, dt);

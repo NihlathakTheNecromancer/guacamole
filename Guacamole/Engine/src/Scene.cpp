@@ -107,16 +107,6 @@ float Scene::GetCameraPitch(void)
     return camera_pitch;
 }
 
-glm::vec3 Scene::GetSceneLightPositionOne(void)
-{
-    return light_position_one;
-}
-
-glm::vec3 Scene::GetSceneLightPositionTwo(void)
-{
-    return light_position_two;
-}
-
 glm::mat4 Scene::GetCameraViewMatrix(void)
 {
     return view_matrix;
@@ -132,37 +122,63 @@ void Scene::SetSceneShaderProgram(ShaderProgram* shader)
     scene_shader_program = shader;
 }
 
-void Scene::SetSceneLightPositionOne(glm::vec3 position)
+void Scene::SetCameraBoundingBox(float x_neg, float x_pos, float z_neg, float z_pos)
 {
-    light_position_one = position;
+    camera_bound_x_neg = x_neg;
+    camera_bound_x_pos = x_pos;
+    camera_bound_z_neg = z_neg;
+    camera_bound_z_pos = z_pos;
 }
 
-void Scene::SetSceneLightPositionTwo(glm::vec3 position)
+bool Scene::CheckBoundingBoxCollision(glm::vec3 pos, glm::vec3 dir, float distance)
 {
-    light_position_two = position;
+    pos += distance * glm::vec3(dir.x, 0.0f, dir.z);
+    if( pos.x > camera_bound_x_pos || 
+        pos.x < camera_bound_x_neg || 
+        pos.z > camera_bound_z_pos ||
+        pos.z < camera_bound_z_neg)
+        return false;
+
+    return true;
 }
 
 void Scene::TranslateCameraRight(float distance)
 {
-    /* Stay on Ground */
     glm::vec3 camera_right = glm::normalize(glm::cross(camera_front, camera_up));
-    camera_position += distance * glm::vec3(camera_right.x, 0.0f, camera_right.z);
+    /* Check Boundary */
+    if(CheckBoundingBoxCollision(camera_position, camera_right, distance))
+    {
+        /* Stay on Ground */
+        camera_position += distance * glm::vec3(camera_right.x, 0.0f, camera_right.z);
+    }
 }
 void Scene::TranslateCameraLeft(float distance)
 {
-    /* Stay on Ground */
     glm::vec3 camera_right = glm::normalize(glm::cross(camera_front, camera_up));
-    camera_position -= distance * glm::vec3(camera_right.x, 0.0f, camera_right.z);
+    /* Check Boundary */
+    if(CheckBoundingBoxCollision(camera_position, -camera_right, distance))
+    {
+        /* Stay on Ground */
+        camera_position -= distance * glm::vec3(camera_right.x, 0.0f, camera_right.z);
+    }
 }
 void Scene::TranslateCameraForward(float distance)
 {
-    /* Stay on Ground */
-    camera_position += distance * glm::vec3(camera_front.x, 0.0f, camera_front.z);
+    /* Check Boundary */
+    if(CheckBoundingBoxCollision(camera_position, camera_front, distance))
+    {
+        /* Stay on Ground */
+        camera_position += distance * glm::vec3(camera_front.x, 0.0f, camera_front.z);
+    }
 }
 void Scene::TranslateCameraBackward(float distance)
 {
-    /* Stay on Ground */
-    camera_position -= distance * glm::vec3(camera_front.x, 0.0f, camera_front.z);
+    /* Check Boundary */
+    if(CheckBoundingBoxCollision(camera_position, -camera_front, distance))
+    {
+        /* Stay on Ground */
+        camera_position -= distance * glm::vec3(camera_front.x, 0.0f, camera_front.z);
+    }
 }
 void Scene::RotateCameraEuler(float yaw, float pitch)
 {

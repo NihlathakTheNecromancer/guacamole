@@ -55,7 +55,7 @@ public:
     /* Configure Model Parameters */
     void SetModelShaderProgram(ShaderProgram* p);
     void SetModelFragmentColour(glm::vec4 c);
-    void SetModelTexture(const std::string& path);
+    void SetModelTexture(Texture* tex);
     void SetModelRenderMode(unsigned int m);
     void SetModelTransparency(bool isTransparent);
 
