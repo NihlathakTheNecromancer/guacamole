@@ -1,0 +1,11 @@
+﻿  main.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\SoundRoomScene.cpp(38,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\BlackHoleRoom.cpp(48,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(32,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(51,57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(51,43): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(103,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(82,16): warning C4101: 'height': unreferenced local variable
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(82,9): warning C4101: 'width': unreferenced local variable
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(129,15): warning C4101: 'transform': unreferenced local variable
+  371Project.vcxproj -> C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Debug\371Project.exe

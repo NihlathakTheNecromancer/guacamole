@@ -1,0 +1,36 @@
+﻿F:\Visual Studio 2019\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(452,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+  stb_image.cpp
+  Animation.cpp
+  Geometry.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Geometry.cpp(34,22): warning C4018: '<': signed/unsigned mismatch
+  Model.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Model.cpp(54,22): warning C4018: '<': signed/unsigned mismatch
+  Primitive.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Primitive.cpp(200,23): warning C4244: 'initializing': conversion from 'long double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Primitive.cpp(201,22): warning C4244: 'initializing': conversion from 'long double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Primitive.cpp(211,34): warning C4244: '=': conversion from 'long double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Primitive.cpp(239,30): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Primitive.cpp(245,36): warning C4018: '<': signed/unsigned mismatch
+  Scene.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Engine\src\Scene.cpp(52,22): warning C4018: '<': signed/unsigned mismatch
+  Texture.cpp
+  BlackHoleRoom.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\BlackHoleRoom.cpp(48,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\SoundRoomScene.cpp(38,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\BlackHoleRoom.cpp(48,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(32,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(51,57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(51,43): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(103,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(82,16): warning C4101: 'height': unreferenced local variable
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(82,9): warning C4101: 'width': unreferenced local variable
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\main.cpp(129,15): warning C4101: 'transform': unreferenced local variable
+  SoundRoomScene.cpp
+C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\InteractiveMuseum\SoundRoomScene.cpp(38,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4286: symbol '___glewActiveTexture' defined in 'glew32s.lib(glew.obj)' is imported by 'Texture.obj'
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Debug\vc120.pdb'; linking object as if no debug info
+  371Project.vcxproj -> C:\Users\Arturo\Desktop\371project\371VisualStudio\371Project\Debug\371Project.exe
