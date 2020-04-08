@@ -375,6 +375,17 @@ public:
         DrawScene();
     }
 
+    void SetKeyCallback(GLFWwindow* window)
+    {
+        glfwSetKeyCallback(window, ArtifactRoom_keyCallback);
+    }
+
+    static void ArtifactRoom_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+    }
+
     /* Define Key Bindings */
     void inline InputController(GLFWwindow* window)
     {
