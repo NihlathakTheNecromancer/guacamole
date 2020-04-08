@@ -38,19 +38,19 @@ protected:
     glm::vec3    light_position_one;                // Position of scene light One
     glm::vec3    light_direction_one;               // Direction of scene light One
     glm::vec4    light_colour_one = glm::vec4(1.0f);// Colour of scene light One
-    float        light_cutoff_one = glm::cos(glm::radians(0.0f));
+    float        light_cutoff_one = glm::cos(glm::radians(180.0f));
     bool         light_switch_one = false;
 
     glm::vec3    light_position_two;                // Position of scene light Two
     glm::vec3    light_direction_two;               // Direction of scene light Two
     glm::vec4    light_colour_two = glm::vec4(1.0f);// Colour of scene light Two
-    float        light_cutoff_two = glm::cos(glm::radians(0.0f));
+    float        light_cutoff_two = glm::cos(glm::radians(180.0f));
     bool         light_switch_two = false;
 
     glm::vec3    light_position_three;              // Position of scene light Three
     glm::vec3    light_direction_three;             // Direction of scene light Three
     glm::vec4    light_colour_three = glm::vec4(1.0f); // Colour of scene light Three
-    float        light_cutoff_three = glm::cos(glm::radians(0.0f));
+    float        light_cutoff_three = glm::cos(glm::radians(180.0f));
     bool         light_switch_three = false;
 
     /* Matrices */

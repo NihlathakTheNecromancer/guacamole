@@ -13,6 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
 
 #include "ArtifactRoomScene.cpp"
+#include "BlackHoleRoom.cpp"
 
 // Function prototypes
 void CameraController(GLFWwindow* window, Scene* currentScene, float dt);
@@ -47,7 +48,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
     // Create Window and rendering context using GLFW, resolution is 800x600
-    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "GUACAMOLE", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "COMP 371 - Interactive Museum - Team 4", NULL, NULL);
     if (window == NULL)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -87,7 +88,9 @@ int main()
     
     /* Scene Initialization */
     ArtifactRoomScene* ArtifactRoom = new ArtifactRoomScene(window_width, window_height);
+    BlackHoleRoomScene* BlackHoleRoom = new BlackHoleRoomScene(window_width, window_height);
     ArtifactRoom->Initialize();
+    BlackHoleRoom->Initialize();
     currentScene = ArtifactRoom;
 
     /* Initialize Cursor */
