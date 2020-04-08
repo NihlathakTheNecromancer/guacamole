@@ -151,4 +151,15 @@ public:
     {
 
     }
+
+    void SetKeyCallback(GLFWwindow* window)
+    {
+        glfwSetKeyCallback(window, BlackHoleRoom_keyCallback);
+    }
+
+    static void BlackHoleRoom_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+    }
 };

@@ -23,8 +23,8 @@ void mouse_movement_callback(GLFWwindow* window, double xpos, double ypos);
 
 /* Globals */
 /* --------*/
-float window_width = 2560.0f;
-float window_height = 1440.0f;
+float window_width = 1024.0f;
+float window_height = 768.0f;
 
 // Camera/Mouse Controls
 bool bLockCursor = true;
@@ -91,7 +91,8 @@ int main()
     BlackHoleRoomScene* BlackHoleRoom = new BlackHoleRoomScene(window_width, window_height);
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
-    currentScene = BlackHoleRoom;
+    currentScene = ArtifactRoom;
+    currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
     glfwSetCursorPos(window, window_width/2, window_height/2);
@@ -146,7 +147,7 @@ void CameraController(GLFWwindow* window, Scene* currentScene, float dt)
     {
         currentScene->TranslateCameraRight(dt * fCameraMovementSpeed);
     }
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    /*if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         if(bLockCursor)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -154,7 +155,7 @@ void CameraController(GLFWwindow* window, Scene* currentScene, float dt)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         bLockCursor = !bLockCursor;
-    }
+    }*/
 }
 void mouse_movement_callback(GLFWwindow* window, double xpos, double ypos)
 {
