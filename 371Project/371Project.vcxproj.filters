@@ -45,6 +45,9 @@
     <ClCompile Include="InteractiveMuseum\ArtifactRoomScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InteractiveMuseum\PongRoom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\include\Geometry.hpp">

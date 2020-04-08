@@ -14,6 +14,9 @@ Model::Model(Geometry* g, Scene* s, Model* p)
     geometry = g; 
     scene = s;
     parent = p;
+
+    dimensions = glm::vec3(1.0f); // This assumes all primitives are initially 1 unit across (length/diameter)
+
     /* If a parent model was assigned, make this model a child of that parent */
     if(parent)
         parent->AddChild(this);
@@ -94,14 +97,23 @@ void Model::TranslateModelAndChildren(glm::vec3 translation)
     }
 }
 
+
+
 void Model::ScaleModel(glm::vec3 scalars)
 {
-     /* Apply scaling */
+    /* Apply scaling */
     glm::mat4 t = glm::scale(glm::mat4(1.0f), scalars);
 
     model_matrix = t * model_matrix;
 
-    *position = t * (*position);    
+    *position = t * (*position);
+}
+
+void Model::ScaleCollisionBoundaries(glm::vec3 scalars)
+{
+    dimensions.x *= scalars.x / 2;
+    dimensions.y *= scalars.y / 2;
+    dimensions.z *= scalars.z / 2;
 }
 
 void Model::ScaleModelAndChildren(glm::vec3 scalars)

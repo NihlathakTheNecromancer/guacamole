@@ -29,6 +29,7 @@
     <ClCompile Include="InteractiveMuseum\ArtifactRoomScene.cpp" />
     <ClCompile Include="InteractiveMuseum\BlackHoleRoom.cpp" />
     <ClCompile Include="InteractiveMuseum\main.cpp" />
+    <ClCompile Include="InteractiveMuseum\PongRoom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\include\stb_image\stb_image.h" />

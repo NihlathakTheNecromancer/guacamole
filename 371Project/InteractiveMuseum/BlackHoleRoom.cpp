@@ -36,7 +36,7 @@ public:
     
     /* Load Textures 
     --------------------------------*/
-    Texture* stars_texture = new Texture("./res/textures/2k_stars");
+    Texture* stars_texture = new Texture("./res/textures/2k_stars.jpg");
 
     /* Constructor */
     BlackHoleRoomScene(float windowWidth, float windowHeight)
