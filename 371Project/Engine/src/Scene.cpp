@@ -13,8 +13,7 @@ Scene::Scene(void)
 
 Model* Scene::CreateModelPrimitive(PrimitiveType type, Model* parent)
 {
-    Model* newModel;
-    
+    Model* newModel;   
 
     switch(type)
     {

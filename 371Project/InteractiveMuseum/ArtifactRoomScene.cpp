@@ -42,12 +42,12 @@ public:
 
     /* Loading Shaders 
     --------------------------------*/
-    ShaderProgram* scene_shader_program = new ShaderProgram("res/shaders/artifact.fs","res/shaders/artifact.vs");
+    ShaderProgram* scene_shader_program = new ShaderProgram("./res/shaders/artifact.fs","./res/shaders/artifact.vs");
 
     /* Loading Textures 
     --------------------------------*/
-    Texture* ceiling_texture = new Texture("res/textures/white-painted-ceiling-texture.jpg");
-    Texture* artifact_arm_texture = new Texture("res/textures/bark.jpg");
+    Texture* ceiling_texture = new Texture("./res/textures/white-painted-ceiling-texture.jpg");
+    Texture* artifact_arm_texture = new Texture("./res/textures/bark.jpg");
 
 
     /* Constructor */
@@ -69,7 +69,7 @@ public:
         SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, 0.0f));
         SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
         //SetSceneLightColourOne(glm::vec4(0.7f, 0.1f, 0.1f, 1.0f));
-        SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
+        SetSceneLightCutoffOne(glm::cos(glm::radians(180.0f)));
         SetSceneLightSwitchOne(true);
 
         // SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));

@@ -16,6 +16,7 @@ public:
     float spinningAngleX = 1.0f;
     float spinningAngleY = 0.0f;
     float spinningAngleZ = 1.0f;
+    float rotation_speed = 1.0f;
 
     float room_bound_neg_x = -49.5*Unit;
     float room_bound_pos_x = 49.5*Unit;
@@ -134,7 +135,7 @@ public:
         spinningAngleX = 0.1f * dt / 2.0f;
         spinningAngleY = 0.1f * -dt / 2.0f;
         spinningAngleZ = 0.1f * dt / 2.0f;
-        std::cout << "X: " << spinningAngleX << "\tY: " << spinningAngleY << "\tZ: " << spinningAngleZ << std::endl;
+        //std::cout << "X: " << spinningAngleX << "\tY: " << spinningAngleY << "\tZ: " << spinningAngleZ << std::endl;
         glm::vec3 spin = glm::normalize(glm::vec3(spinningAngleX, spinningAngleY, spinningAngleZ));
         mFloor->RotateModel(glm::radians(spinningAngle), glm::vec3(spin));
         mCeiling->RotateModel(glm::radians(spinningAngle), glm::vec3(spin));

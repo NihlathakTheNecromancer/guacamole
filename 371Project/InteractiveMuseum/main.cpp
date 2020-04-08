@@ -23,8 +23,8 @@ void mouse_movement_callback(GLFWwindow* window, double xpos, double ypos);
 
 /* Globals */
 /* --------*/
-float window_width = 1024.0f;
-float window_height = 768.0f;
+float window_width = 2560.0f;
+float window_height = 1440.0f;
 
 // Camera/Mouse Controls
 bool bLockCursor = true;
@@ -91,7 +91,7 @@ int main()
     BlackHoleRoomScene* BlackHoleRoom = new BlackHoleRoomScene(window_width, window_height);
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
-    currentScene = ArtifactRoom;
+    currentScene = BlackHoleRoom;
 
     /* Initialize Cursor */
     glfwSetCursorPos(window, window_width/2, window_height/2);
