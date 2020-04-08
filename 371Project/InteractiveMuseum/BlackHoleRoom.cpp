@@ -17,10 +17,11 @@ public:
     float spinningAngleY = 0.0f;
     float spinningAngleZ = 1.0f;
 
-    //From https://www.solarsystemscope.com/textures/
-    std::string stars = "./res/textures/2k_stars.jpg";
-    //std::string door = "C:/res/textures/door.jpg";
-    std::string tex = "./res/shaders/";
+    float room_bound_neg_x = -49.5*Unit;
+    float room_bound_pos_x = 49.5*Unit;
+    float room_bound_neg_z = -49.5*Unit;
+    float room_bound_pos_z = 49.5*Unit;
+
 
     /* Models */
     Model* mGround;
@@ -30,7 +31,11 @@ public:
 
     /* Defining Shaders
     --------------------------------*/
-    ShaderProgram* scene_shader_program = new ShaderProgram(tex+"default.fs", tex+"default.vs");
+    ShaderProgram* scene_shader_program = new ShaderProgram("./res/shaders/default.fs", "./res/shaders/default.vs");
+    
+    /* Load Textures 
+    --------------------------------*/
+    Texture* stars_texture = new Texture("./res/textures/2k_stars");
 
     /* Constructor */
     BlackHoleRoomScene(float windowWidth, float windowHeight)
@@ -43,9 +48,11 @@ public:
     void inline Initialize(void)
     {
         SetSceneShaderProgram(scene_shader_program);
-        SetSceneLightPosition(glm::vec3(0.0f, 45 * Unit, 0.0f));
+        SetSceneLightPositionOne(glm::vec3(0.0f, 45 * Unit, 0.0f));
+        SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
         SetCameraView(glm::vec3(0.0f, 2 * Unit, 25 * Unit), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         SetCameraPerspective(70.0f, (window_width / window_height), 0.001 * Unit, 2000 * Unit);
+        SetCameraBoundingBox(room_bound_neg_x, room_bound_pos_x, room_bound_neg_z, room_bound_pos_z);
 
         /* Modelling */
         // Floor Model
@@ -53,7 +60,7 @@ public:
         mFloor->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
         mFloor->TranslateModel(glm::vec3(0.0f, -room_width / 2.0f, 0.0f));
         mFloor->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-        mFloor->SetModelTexture(stars);
+        mFloor->SetModelTexture(stars_texture);
 
         // Bridge Model          /////////////////////////////////////////////////////////////////////////
         mBridge = CreateModelPrimitive(PLANE, NULL);
@@ -66,7 +73,7 @@ public:
         mCeiling->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
         mCeiling->RotateModel(glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mCeiling->TranslateModel(glm::vec3(0.0f, room_width/2.0f, 0.0f));
-        mCeiling->SetModelTexture(stars);
+        mCeiling->SetModelTexture(stars_texture);
 
         // Left Wall Model
         mLeftWall = CreateModelPrimitive(PLANE, NULL);
@@ -75,7 +82,7 @@ public:
         mLeftWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mLeftWall->TranslateModel(glm::vec3(-room_width, 0.0f, 0.0f));
         //mLeftWall->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-        mLeftWall->SetModelTexture(stars);
+        mLeftWall->SetModelTexture(stars_texture);
 
         // Right Wall Model
         mRightWall = CreateModelPrimitive(PLANE, NULL);
@@ -83,7 +90,7 @@ public:
         mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mRightWall->TranslateModel(glm::vec3(room_width, 0.0f, 0.0f));
-        mRightWall->SetModelTexture(stars);
+        mRightWall->SetModelTexture(stars_texture);
         //RightWall->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
         // Far Wall Model
@@ -91,7 +98,7 @@ public:
         mFarWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
         mFarWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mFarWall->TranslateModel(glm::vec3(0.0f, 0.0f, -room_width));
-        mFarWall->SetModelTexture(stars);
+        mFarWall->SetModelTexture(stars_texture);
         //mFarWall->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
         // Far Wall Door Model                            ////////////////////////////////////////////////////
@@ -108,7 +115,7 @@ public:
         mNearWall->RotateModel(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         mNearWall->TranslateModel(glm::vec3(0.0f, 0.0f, room_width));
         mNearWall->SetModelFragmentColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        mNearWall->SetModelTexture(stars);
+        mNearWall->SetModelTexture(stars_texture);
         
         
         // Near Wall Door Model //////////////////////////////////////////////////////////////////////////
