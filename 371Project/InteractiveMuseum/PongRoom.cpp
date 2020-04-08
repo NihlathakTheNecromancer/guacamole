@@ -27,7 +27,7 @@ public:
     ShaderProgram* scene_shader_program = new ShaderProgram(tex + "default.fs", tex + "default.vs");
 
     /* Constructor */
-    BlackHoleRoomScene(float windowWidth, float windowHeight)
+    PongRoomScene(float windowWidth, float windowHeight)
     {
         window_width = windowWidth;
         window_height = windowHeight;
@@ -37,7 +37,7 @@ public:
     void inline Initialize(void)
     {
         SetSceneShaderProgram(scene_shader_program);
-        SetSceneLightPosition(glm::vec3(0.0f, 45 * Unit, 0.0f));
+        SetSceneLightPositionOne(glm::vec3(0.0f, 45 * Unit, 0.0f));
         SetCameraView(glm::vec3(0.0f, 2 * Unit, 25 * Unit), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         SetCameraPerspective(70.0f, (window_width / window_height), 0.001 * Unit, 2000 * Unit);
 
