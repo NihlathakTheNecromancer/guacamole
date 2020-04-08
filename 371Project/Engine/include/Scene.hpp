@@ -143,6 +143,7 @@ public:
     virtual void    Initialize(void) = 0;
     virtual void    Update(float dt) = 0;
     virtual void    InputController(GLFWwindow* window) = 0;
+    virtual void    SetKeyCallback(GLFWwindow* window) = 0;
 
 };
 #endif /* _SCENE_H */

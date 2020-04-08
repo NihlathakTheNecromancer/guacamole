@@ -26,9 +26,9 @@
     <ClCompile Include="Engine\src\Primitive.cpp" />
     <ClCompile Include="Engine\src\Scene.cpp" />
     <ClCompile Include="Engine\src\Texture.cpp" />
+    <ClCompile Include="InteractiveMuseum\ArtifactRoomScene.cpp" />
     <ClCompile Include="InteractiveMuseum\BlackHoleRoom.cpp" />
     <ClCompile Include="InteractiveMuseum\main.cpp" />
-    <ClCompile Include="InteractiveMuseum\SoundRoomScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\include\stb_image\stb_image.h" />
