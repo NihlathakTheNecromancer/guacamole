@@ -22,8 +22,12 @@ public:
     bool bArtifact2Enabled = false;
     bool bArtifact3Enabled = false;
     bool bFinalState       = false;
+    bool bDelayState       = false;
     float fInteractionLength = 2*Unit;
     float timer0 = 0.0f;
+    float red_shift = 0.0f;
+    float green_shift = 0.0f;
+    float blue_shift = glm::sin(glm::radians(180.0f));
 
     /* Models */
     Model *mGround;
@@ -69,7 +73,7 @@ public:
         SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, 0.0f));
         SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
         //SetSceneLightColourOne(glm::vec4(0.7f, 0.1f, 0.1f, 1.0f));
-        SetSceneLightCutoffOne(glm::cos(glm::radians(180.0f)));
+        SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
         SetSceneLightSwitchOne(true);
 
         // SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));
@@ -358,19 +362,27 @@ public:
     /* This is called once per frame */
     void inline Update(float dt)
     {
-        if(bFinalState)
+        if(bDelayState)
         {
             timer0 += dt;
-            if( timer0 >= 2.0f)
+            if( timer0 >= 1.0f)
             {
                 SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, 0.0f));
                 SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
                 SetSceneLightColourOne(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-                SetSceneLightCutoffOne(glm::cos(glm::radians(25.0f)));
+                SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
                 SetSceneLightSwitchTwo(false);
                 SetSceneLightSwitchThree(false);
-                bFinalState = false;
+                bDelayState = false;
+                bFinalState = true;
             }
+        }
+        if(bFinalState)
+        {
+            red_shift += dt;
+            green_shift += dt;
+            blue_shift -= dt;
+            mArtifact0Sphere->SetModelFragmentColour(glm::vec4(glm::sin(red_shift), glm::cos(green_shift), glm::sin(blue_shift), 0.6f));
         }
         DrawScene();
     }
@@ -400,19 +412,18 @@ public:
                 SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
                 SetSceneLightColourOne(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
                 SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
-                SetSceneLightSwitchOne(true);
+                SetSceneLightSwitchOne(false);
+                SetSceneLightSwitchThree(true);
 
                 SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));
                 SetSceneLightDirectionTwo(glm::vec3(0.0f, -1.0f, 0.0f));
                 SetSceneLightColourTwo(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
                 SetSceneLightCutoffTwo(glm::cos(glm::radians(12.5f)));
-                SetSceneLightSwitchTwo(true);
 
                 SetSceneLightPositionThree(glm::vec3(-45*Unit, 45*Unit, 0.0f));
                 SetSceneLightDirectionThree(glm::vec3(0.0f, -1.0f, 0.0f));
                 SetSceneLightColourThree(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
                 SetSceneLightCutoffThree(glm::cos(glm::radians(12.5f)));
-                SetSceneLightSwitchThree(true);
 
             }
             if(glm::length(mArtifact1Sphere->GetModelPosition() - GetCameraPosition()) <= fInteractionLength && bArtifact0Enabled && !bArtifact1Enabled)
@@ -421,6 +432,7 @@ public:
                 SetSceneLightPositionThree(glm::vec3(-45*Unit, 45*Unit, 0.0f));
                 SetSceneLightColourThree(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
                 SetSceneLightCutoffThree(glm::cos(glm::radians(12.5f)));
+                SetSceneLightSwitchOne(true);
             }
             if(glm::length(mArtifact2Sphere->GetModelPosition() - GetCameraPosition()) <= fInteractionLength && bArtifact0Enabled && !bArtifact2Enabled)
             {
@@ -435,10 +447,11 @@ public:
                 SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, -45*Unit));
                 SetSceneLightColourOne(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
                 SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
+                SetSceneLightSwitchTwo(true);
             }
             if( bArtifact0Enabled && bArtifact1Enabled && bArtifact2Enabled && bArtifact3Enabled)
             {
-                bFinalState = true;
+                bDelayState = true;
             }
         }
     }

@@ -28,7 +28,7 @@ float window_height = 768.0f;
 
 // Camera/Mouse Controls
 bool bLockCursor = true;
-bool bInitMouse = true;
+bool bFirstMouse = true;
 float fCameraSensitivity = 0.05;
 float fCameraMovementSpeed = 10.0f;
 float fCameraZoomSpeed = 0.1f;
@@ -168,6 +168,14 @@ void mouse_movement_callback(GLFWwindow* window, double xpos, double ypos)
 
         x_diff = (window_width/2 - (float)xpos) * fCameraSensitivity;
         y_diff = (window_height/2 - (float)ypos) * fCameraSensitivity;
+
+        // Because.
+        if (bFirstMouse)
+        {
+            x_diff = 90.0f;
+            y_diff = 0;
+            bFirstMouse = false;
+        }
 
         yaw += -x_diff;
         pitch += y_diff;
