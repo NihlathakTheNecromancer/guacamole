@@ -31,7 +31,6 @@ float window_height = 768.0f;
 // Camera/Mouse Controls
 bool bFirstMouse = true;
 bool bLockCursor = true;
-bool bFirstMouse = true;
 float fCameraSensitivity = 0.05;
 float fCameraMovementSpeed = 10.0f;
 float fCameraZoomSpeed = 0.1f;
@@ -96,7 +95,7 @@ int main()
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
     PongRoom->Initialize();
-    currentScene = PongRoom;
+    currentScene = BlackHoleRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
