@@ -14,6 +14,8 @@ uniform float 		ambient_light_intensity = 0.1f;
 uniform vec3		light_position_one;
 uniform vec3		camera_position;
 
+
+
 float CalculateShadow()
 {
 	vec3 ndc = fragment_position_light_space.xyz / fragment_position_light_space.w;

@@ -1,5 +1,11 @@
 #include "../include/Animation.hpp"
 
+enum AnimationType {
+    TRANSLATE,
+    SCALE,
+    ROTATE
+};
+
 Animation::Animation(Model* model)
 {
     this->model = model;
@@ -17,22 +23,22 @@ void Animation::Register(unsigned int type, glm::vec4* direction, float speed, f
 void Animation::Step(float input_direction, float dt)
 {
     if( current_pos >= upper_bound || current_pos <= lower_bound )
-    speed = (-1)*speed;
+        speed = (-1)*speed;
 
     current_pos += dt*speed*input_direction;
 
     switch(type)
     {
-    case 0: // Translate
+    case TRANSLATE: // Translate
         model->TranslateModelAndChildren(glm::vec3(*transform_direction) * (dt*speed*input_direction));
         break;
 
-    case 1: // Scale
+    case SCALE: // Scale
             /* TODO */
 
         break;
 
-    case 2: // Rotate
+    case ROTATE: // Rotate
         glm::vec3 model_position = model->GetModelPosition();
         model->TranslateModelAndChildren(-model_position);
         model->RotateModelAndChildren(dt*speed*input_direction, *transform_direction);

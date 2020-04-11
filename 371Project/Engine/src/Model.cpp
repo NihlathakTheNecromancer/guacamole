@@ -14,6 +14,9 @@ Model::Model(Geometry* g, Scene* s, Model* p)
     geometry = g; 
     scene = s;
     parent = p;
+
+    dimensions = glm::vec3(1.0f); // This assumes all primitives are initially 1 unit across (length/diameter)
+
     /* If a parent model was assigned, make this model a child of that parent */
     if(parent)
         parent->AddChild(this);
@@ -94,14 +97,23 @@ void Model::TranslateModelAndChildren(glm::vec3 translation)
     }
 }
 
+
+
 void Model::ScaleModel(glm::vec3 scalars)
 {
-     /* Apply scaling */
+    /* Apply scaling */
     glm::mat4 t = glm::scale(glm::mat4(1.0f), scalars);
 
     model_matrix = t * model_matrix;
 
-    *position = t * (*position);    
+    *position = t * (*position);
+}
+
+void Model::ScaleCollisionBoundaries(glm::vec3 scalars)
+{
+    dimensions.x *= scalars.x / 2;
+    dimensions.y *= scalars.y / 2;
+    dimensions.z *= scalars.z / 2;
 }
 
 void Model::ScaleModelAndChildren(glm::vec3 scalars)
@@ -198,86 +210,41 @@ void Model::SetModelFragmentColour(glm::vec4 c)
     fragment_colour = c;
 }
 
-void Model::BindUniforms(void)
+void Model::BindUniforms(void) {
+    // TODO pretty sure this will never be invoked
+    BindUniforms(model_shader_program);
+}
+
+void Model::BindUniforms(ShaderProgram* shader)
 {
     unsigned int uniformLocation; 
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "model_matrix");
+    uniformLocation = glGetUniformLocation(shader->id, "model_matrix");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &model_matrix[0][0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "view_matrix");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraViewMatrix()[0][0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "projection_matrix");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraProjectionMatrix()[0][0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "camera_position");
-    glUniform4fv(uniformLocation, 1, &scene->GetCameraPosition()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_one");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionOne()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_one");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionOne()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_one");
-    glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourOne()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_one");
-    glUniform1f(uniformLocation, scene->GetSceneLightCutoffOne());
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_one");
-    glUniform1i(uniformLocation, scene->GetSceneLightSwitchOne());
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_two");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionTwo()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_two");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionTwo()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_two");
-    glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourTwo()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_two");
-    glUniform1f(uniformLocation, scene->GetSceneLightCutoffTwo());
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_two");
-    glUniform1i(uniformLocation, scene->GetSceneLightSwitchTwo());
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_three");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionThree()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_three");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionThree()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_three");
-    glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourThree()[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_three");
-    glUniform1f(uniformLocation, scene->GetSceneLightCutoffThree());
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_three");
-    glUniform1i(uniformLocation, scene->GetSceneLightSwitchThree());
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "fragment_colour");
+    uniformLocation = glGetUniformLocation(shader->id, "fragment_colour");
     glUniform4fv(uniformLocation, 1, &fragment_colour[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "is_textured");
+    uniformLocation = glGetUniformLocation(shader->id, "is_textured");
     glUniform1i(uniformLocation, textures_enabled);
-    
-    if(textures_enabled)
+
+    if (textures_enabled)
     {
-        uniformLocation = glGetUniformLocation(model_shader_program->id, "u_texture");
+        uniformLocation = glGetUniformLocation(shader->id, "u_texture");
         glUniform1i(uniformLocation, texture->GetTextureSlot());
     }
 }
 
-void Model::Draw(void)
+void Model::Draw() {
+    Draw(model_shader_program);
+}
+
+void Model::Draw(ShaderProgram* shader)
 {
-    glUseProgram(model_shader_program->id);
-    if(textures_enabled) texture->Bind(1);
+    glUseProgram(shader->id); // This was invoked by DrawScene, which then called this function
+    if(textures_enabled) texture->Bind(0);
     if(transparency_enabled) glEnable(GL_BLEND);
-    BindUniforms();
+    BindUniforms(shader);
 
     glBindVertexArray(geometry->vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry->ibo);
@@ -287,5 +254,5 @@ void Model::Draw(void)
 
     if(transparency_enabled) glDisable(GL_BLEND);
     if(textures_enabled) texture->Unbind();
-    glUseProgram(0);
+    glUseProgram(0); // Will be invoked by DrawScene once the rendering is finished
 }

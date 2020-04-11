@@ -14,6 +14,7 @@ uniform mat4 view_matrix = mat4(1.0f);
 uniform mat4 model_matrix = mat4(1.0f);
 uniform mat4 light_vp;
 
+
 void main()
 {
 	fragment_position = vec3(model_matrix * vec4(aPos, 1.0f));

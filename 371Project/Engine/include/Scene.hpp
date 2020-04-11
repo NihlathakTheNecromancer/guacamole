@@ -140,6 +140,7 @@ public:
     
     /* Draw */
     void            DrawScene(void);
+    void            DrawScene(ShaderProgram* shader);
     virtual void    Initialize(void) = 0;
     virtual void    Update(float dt) = 0;
     virtual void    InputController(GLFWwindow* window) = 0;

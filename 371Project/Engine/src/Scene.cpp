@@ -42,10 +42,31 @@ Model* Scene::CreateModelPrimitive(PrimitiveType type, Model* parent)
 /* Draw the Scene */
 void Scene::DrawScene(void)
 {  
-    for(unsigned int i = 0; i < models.size(); i++)
+    DrawScene(scene_shader_program);
+}
+
+void Scene::DrawScene(ShaderProgram* shader)
+{
+    glUseProgram(shader->id);
+    unsigned int uniformLocation;
+
+    // These should be the same for a given scene rendering
     {
-        models[i]->Draw();
+        uniformLocation = glGetUniformLocation(shader->id, "view_matrix");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &GetCameraViewMatrix()[0][0]);
+
+        uniformLocation = glGetUniformLocation(shader->id, "projection_matrix");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &GetCameraProjectionMatrix()[0][0]);
+
+        uniformLocation = glGetUniformLocation(shader->id, "camera_position");
+        glUniform4fv(uniformLocation, 1, &GetCameraPosition()[0]);
     }
+
+    for (unsigned int i = 0; i < models.size(); i++)
+    {
+        models[i]->Draw(shader);
+    }
+    glUseProgram(0);
 }
 
 void Scene::ToggleSceneTextures(void)
@@ -132,6 +153,8 @@ void Scene::SetCameraBoundingBox(float x_neg, float x_pos, float z_neg, float z_
 
 bool Scene::CheckBoundingBoxCollision(glm::vec3 pos, glm::vec3 dir, float distance)
 {
+    return true; 
+    
     pos += distance * glm::vec3(dir.x, 0.0f, dir.z);
     if( pos.x > camera_bound_x_pos || 
         pos.x < camera_bound_x_neg || 
@@ -150,6 +173,7 @@ void Scene::TranslateCameraRight(float distance)
     {
         /* Stay on Ground */
         camera_position += distance * glm::vec3(camera_right.x, 0.0f, camera_right.z);
+        camera_position += distance * glm::vec3(camera_right);
     }
 }
 void Scene::TranslateCameraLeft(float distance)
@@ -160,6 +184,7 @@ void Scene::TranslateCameraLeft(float distance)
     {
         /* Stay on Ground */
         camera_position -= distance * glm::vec3(camera_right.x, 0.0f, camera_right.z);
+        camera_position -= distance * glm::vec3(camera_right);
     }
 }
 void Scene::TranslateCameraForward(float distance)
@@ -169,6 +194,7 @@ void Scene::TranslateCameraForward(float distance)
     {
         /* Stay on Ground */
         camera_position += distance * glm::vec3(camera_front.x, 0.0f, camera_front.z);
+        camera_position += distance * glm::vec3(camera_front);
     }
 }
 void Scene::TranslateCameraBackward(float distance)
@@ -178,6 +204,7 @@ void Scene::TranslateCameraBackward(float distance)
     {
         /* Stay on Ground */
         camera_position -= distance * glm::vec3(camera_front.x, 0.0f, camera_front.z);
+        camera_position -= distance * glm::vec3(camera_front);
     }
 }
 void Scene::RotateCameraEuler(float yaw, float pitch)
