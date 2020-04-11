@@ -3,6 +3,7 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices=18) out;
 
+uniform int spotlight_count;
 uniform mat4 view_projections[6];
 
 out vec4 frag_position;
@@ -11,7 +12,7 @@ void main()
 {
 	// Meant for omnidirectional depth mapping (6 sided cube)
 	// But works fine with fewer frustums as long as the FOVs do not overlap
-	for (int face=0; face < 6; face++)
+	for (int face=0; face < spotlight_count; face++)
 	{
 		gl_Layer = face;
 		for(int i=0; i < 3; ++i)

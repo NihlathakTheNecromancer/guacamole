@@ -40,7 +40,8 @@ public:
     // Shadows
     DepthCubemap mDepthCubemap;
     glm::mat4 spotlightPerspective;
-    glm::vec3 lightPosition;
+    glm::vec3 lightPosition; // Since we have one light source at a time, we only need one light position
+    int spotlightCount;
     float lightNearPlane, lightFarPlane;
 
     // Debug
@@ -100,7 +101,7 @@ public:
         prepareDepthCubemap();
 
         // To make an omnidirectional shadow map we will create 6 spotlights
-        int spotlightCount = 6;
+        spotlightCount = 6;
         // Each spotlight will face along one of the cardinal axes (postive and negative)
         lightNearPlane = ballRadius; // Near plane to minimum, far plane to longest distance across room.
         lightFarPlane = 25.0f;//sqrtf(room_width * room_width + room_width * room_width + room_height * room_height);
@@ -334,9 +335,10 @@ public:
             glUseProgram(mDepthCubemap.shader->id);
             glUniform3fv(glGetUniformLocation(mDepthCubemap.shader->id, "light_position"), 1, &lightPosition[0]);
 
-            for (int i = 0; i < 6; i++) {
-                std::string uniformName = "view_projections[" + std::to_string(i) + "]";
-                glUniformMatrix4fv(glGetUniformLocation(mDepthCubemap.shader->id, uniformName.c_str()), 1, GL_FALSE, &spotlightViewProjections[i][0][0]);
+            unsigned int i = 0;
+            for (mat4 &viewProjection: spotlightViewProjections) {
+                std::string uniformName = "view_projections[" + std::to_string(i++) + "]";
+                glUniformMatrix4fv(glGetUniformLocation(mDepthCubemap.shader->id, uniformName.c_str()), 1, GL_FALSE, &viewProjection[0][0]);
             }
 
             glUseProgram(point_light_shader->id);

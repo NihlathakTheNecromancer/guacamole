@@ -372,6 +372,7 @@ public:
                 bFinalState = false;
             }
         }
+        //BindArtifactRoomUniforms();
         DrawScene();
     }
 
@@ -440,6 +441,61 @@ public:
             {
                 bFinalState = true;
             }
+        }
+    }
+
+    void BindArtifactRoomUniforms() {
+        // TODO These are so specific it hurts me
+        {
+            glUseProgram(scene_shader_program->id);
+            unsigned int uniformLocation;
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_position_one");
+            glUniform3fv(uniformLocation, 1, &GetSceneLightPositionOne()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_direction_one");
+            glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionOne()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_colour_one");
+            glUniform4fv(uniformLocation, 1, &GetSceneLightColourOne()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_cutoff_one");
+            glUniform1f(uniformLocation, GetSceneLightCutoffOne());
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_switch_one");
+            glUniform1i(uniformLocation, GetSceneLightSwitchOne());
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_position_two");
+            glUniform3fv(uniformLocation, 1, &GetSceneLightPositionTwo()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_direction_two");
+            glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionTwo()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_colour_two");
+            glUniform4fv(uniformLocation, 1, &GetSceneLightColourTwo()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_cutoff_two");
+            glUniform1f(uniformLocation, GetSceneLightCutoffTwo());
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_switch_two");
+            glUniform1i(uniformLocation, GetSceneLightSwitchTwo());
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_position_three");
+            glUniform3fv(uniformLocation, 1, &GetSceneLightPositionThree()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_direction_three");
+            glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionThree()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_colour_three");
+            glUniform4fv(uniformLocation, 1, &GetSceneLightColourThree()[0]);
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_cutoff_three");
+            glUniform1f(uniformLocation, GetSceneLightCutoffThree());
+
+            uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_switch_three");
+            glUniform1i(uniformLocation, GetSceneLightSwitchThree());
+
+            glUseProgram(0);
         }
     }
 };

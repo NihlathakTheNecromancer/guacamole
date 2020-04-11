@@ -42,18 +42,31 @@ Model* Scene::CreateModelPrimitive(PrimitiveType type, Model* parent)
 /* Draw the Scene */
 void Scene::DrawScene(void)
 {  
-    for(unsigned int i = 0; i < models.size(); i++)
-    {
-        models[i]->Draw();
-    }
+    DrawScene(scene_shader_program);
 }
 
 void Scene::DrawScene(ShaderProgram* shader)
 {
+    glUseProgram(shader->id);
+    unsigned int uniformLocation;
+
+    // These should be the same for a given scene rendering
+    {
+        uniformLocation = glGetUniformLocation(shader->id, "view_matrix");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &GetCameraViewMatrix()[0][0]);
+
+        uniformLocation = glGetUniformLocation(shader->id, "projection_matrix");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &GetCameraProjectionMatrix()[0][0]);
+
+        /*uniformLocation = glGetUniformLocation(shader->id, "camera_position");
+        glUniform4fv(uniformLocation, 1, &GetCameraPosition()[0]);*/
+    }
+
     for (unsigned int i = 0; i < models.size(); i++)
     {
         models[i]->Draw(shader);
     }
+    glUseProgram(0);
 }
 
 void Scene::ToggleSceneTextures(void)

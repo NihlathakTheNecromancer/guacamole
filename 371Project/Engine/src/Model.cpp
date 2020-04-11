@@ -211,24 +211,13 @@ void Model::SetModelFragmentColour(glm::vec4 c)
 }
 
 void Model::BindUniforms(void) {
+    // TODO pretty sure this will never be invoked
     BindUniforms(model_shader_program);
 }
 
 void Model::BindUniforms(ShaderProgram* shader)
 {
     unsigned int uniformLocation; 
-
-    // These should be scene properties, they aren't specific to the model
-    {
-        uniformLocation = glGetUniformLocation(shader->id, "view_matrix");
-        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraViewMatrix()[0][0]);
-
-        uniformLocation = glGetUniformLocation(shader->id, "projection_matrix");
-        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraProjectionMatrix()[0][0]);
-
-        /*uniformLocation = glGetUniformLocation(shader->id, "camera_position");
-        glUniform4fv(uniformLocation, 1, &scene->GetCameraPosition()[0]);*/
-    }
 
     uniformLocation = glGetUniformLocation(shader->id, "model_matrix");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &model_matrix[0][0]);
@@ -247,52 +236,51 @@ void Model::BindUniforms(ShaderProgram* shader)
 
     // TODO These are so specific it hurts me
     {
-    /*uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_one");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionOne()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_one");
+        glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionOne()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_one");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionOne()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_one");
+        glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionOne()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_one");
-    glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourOne()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_one");
+        glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourOne()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_one");
-    glUniform1f(uniformLocation, scene->GetSceneLightCutoffOne());
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_one");
+        glUniform1f(uniformLocation, scene->GetSceneLightCutoffOne());
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_one");
-    glUniform1i(uniformLocation, scene->GetSceneLightSwitchOne());
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_one");
+        glUniform1i(uniformLocation, scene->GetSceneLightSwitchOne());
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_two");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionTwo()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_two");
+        glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionTwo()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_two");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionTwo()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_two");
+        glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionTwo()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_two");
-    glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourTwo()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_two");
+        glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourTwo()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_two");
-    glUniform1f(uniformLocation, scene->GetSceneLightCutoffTwo());
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_two");
+        glUniform1f(uniformLocation, scene->GetSceneLightCutoffTwo());
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_two");
-    glUniform1i(uniformLocation, scene->GetSceneLightSwitchTwo());
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_two");
+        glUniform1i(uniformLocation, scene->GetSceneLightSwitchTwo());
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_three");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionThree()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_three");
+        glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionThree()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_three");
-    glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionThree()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_three");
+        glUniform3fv(uniformLocation, 1, &scene->GetSceneLightDirectionThree()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_three");
-    glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourThree()[0]);
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_colour_three");
+        glUniform4fv(uniformLocation, 1, &scene->GetSceneLightColourThree()[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_three");
-    glUniform1f(uniformLocation, scene->GetSceneLightCutoffThree());
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_cutoff_three");
+        glUniform1f(uniformLocation, scene->GetSceneLightCutoffThree());
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_three");
-    glUniform1i(uniformLocation, scene->GetSceneLightSwitchThree());
+        uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_three");
+        glUniform1i(uniformLocation, scene->GetSceneLightSwitchThree());
 
-    */
     }
 }
 
@@ -302,7 +290,7 @@ void Model::Draw() {
 
 void Model::Draw(ShaderProgram* shader)
 {
-    glUseProgram(shader->id);
+    glUseProgram(shader->id); // This was invoked by DrawScene, which then called this function
     if(textures_enabled) texture->Bind(0);
     if(transparency_enabled) glEnable(GL_BLEND);
     BindUniforms(shader);
@@ -315,5 +303,5 @@ void Model::Draw(ShaderProgram* shader)
 
     if(transparency_enabled) glDisable(GL_BLEND);
     if(textures_enabled) texture->Unbind();
-    glUseProgram(0);
+    glUseProgram(0); // Will be invoked by DrawScene once the rendering is finished
 }
