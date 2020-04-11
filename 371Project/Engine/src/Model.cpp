@@ -284,9 +284,13 @@ void Model::BindUniforms(void)
     }
 }
 
-void Model::Draw(void)
+void Model::Draw() {
+    Draw(model_shader_program);
+}
+
+void Model::Draw(ShaderProgram* shader)
 {
-    glUseProgram(model_shader_program->id);
+    glUseProgram(shader->id);
     if(textures_enabled) texture->Bind(1);
     if(transparency_enabled) glEnable(GL_BLEND);
     BindUniforms();

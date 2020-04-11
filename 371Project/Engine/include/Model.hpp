@@ -79,6 +79,7 @@ public:
     /* Drawing */
     void BindUniforms(void);
     void Draw(void);
+    void Draw(ShaderProgram* shader);
 
     /* Toggle */
     void ToggleModelTexture(void);

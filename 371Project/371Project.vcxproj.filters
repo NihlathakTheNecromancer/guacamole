@@ -85,5 +85,26 @@
     <None Include="res\shaders\default.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\depthCubemap.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\depthCubemap.gs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\depthCubemap.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\pointLight.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\pointLight.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\artifact.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\artifact.vs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

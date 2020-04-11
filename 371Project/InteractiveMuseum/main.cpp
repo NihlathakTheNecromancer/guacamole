@@ -174,7 +174,7 @@ void mouse_movement_callback(GLFWwindow* window, double xpos, double ypos)
         x_diff = (window_width/2 - (float)xpos) * fCameraSensitivity;
         y_diff = (window_height/2 - (float)ypos) * fCameraSensitivity;
 
-        // Because.
+        // Prevent camera jump on first mouse movement
         if (bFirstMouse)
         {
             x_diff = 90.0f;

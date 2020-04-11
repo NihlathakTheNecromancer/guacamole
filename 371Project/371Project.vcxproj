@@ -43,8 +43,15 @@
     <ClInclude Include="Engine\include\Utilities.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\artifact.fs" />
+    <None Include="res\shaders\artifact.vs" />
     <None Include="res\shaders\default.fs" />
     <None Include="res\shaders\default.vs" />
+    <None Include="res\shaders\depthCubemap.fs" />
+    <None Include="res\shaders\depthCubemap.gs" />
+    <None Include="res\shaders\depthCubemap.vs" />
+    <None Include="res\shaders\pointLight.fs" />
+    <None Include="res\shaders\pointLight.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -124,7 +131,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\lib\win32;$(ProjectDir)ThirdParty\glfw-3.3\lib\win32\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\lib\win32;$(ProjectDir)ThirdParty\glfw-3.3\lib\win32\lib-vc2017;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

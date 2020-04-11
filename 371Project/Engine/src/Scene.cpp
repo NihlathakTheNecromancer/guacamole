@@ -48,6 +48,14 @@ void Scene::DrawScene(void)
     }
 }
 
+void Scene::DrawScene(ShaderProgram* shader)
+{
+    for (unsigned int i = 0; i < models.size(); i++)
+    {
+        models[i]->Draw(shader);
+    }
+}
+
 void Scene::ToggleSceneTextures(void)
 {
     for(int i = 0; i < models.size(); i++)
