@@ -14,6 +14,8 @@
 
 #include "ArtifactRoomScene.cpp"
 #include "BlackHoleRoom.cpp"
+#include "PongRoom.cpp"
+
 
 // Function prototypes
 void CameraController(GLFWwindow* window, Scene* currentScene, float dt);
@@ -27,6 +29,7 @@ float window_width = 1024.0f;
 float window_height = 768.0f;
 
 // Camera/Mouse Controls
+bool bFirstMouse = true;
 bool bLockCursor = true;
 bool bInitMouse = true;
 float fCameraSensitivity = 0.05;
@@ -44,8 +47,8 @@ int main()
     glfwInit();
 
     // On windows, we set OpenGL version to 2.1, to support more hardware
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
     // Create Window and rendering context using GLFW, resolution is 800x600
     GLFWwindow* window = glfwCreateWindow(window_width, window_height, "COMP 371 - Interactive Museum - Team 4", NULL, NULL);
@@ -89,9 +92,11 @@ int main()
     /* Scene Initialization */
     ArtifactRoomScene* ArtifactRoom = new ArtifactRoomScene(window_width, window_height);
     BlackHoleRoomScene* BlackHoleRoom = new BlackHoleRoomScene(window_width, window_height);
+    PongRoomScene* PongRoom = new PongRoomScene(window_width, window_height);
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
-    currentScene = ArtifactRoom;
+    PongRoom->Initialize();
+    currentScene = PongRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
@@ -168,6 +173,14 @@ void mouse_movement_callback(GLFWwindow* window, double xpos, double ypos)
 
         x_diff = (window_width/2 - (float)xpos) * fCameraSensitivity;
         y_diff = (window_height/2 - (float)ypos) * fCameraSensitivity;
+
+        // Prevent camera jump on first mouse movement
+        if (bFirstMouse)
+        {
+            x_diff = 90.0f;
+            y_diff = 0;
+            bFirstMouse = false;
+        }
 
         yaw += -x_diff;
         pitch += y_diff;

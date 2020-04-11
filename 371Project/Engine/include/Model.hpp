@@ -37,6 +37,7 @@ public:
     glm::vec4* forward_direction;
     glm::vec4* right_direction;
 
+    glm::vec3 dimensions;
 
     glm::mat4 model_matrix;
     glm::vec4 fragment_colour;
@@ -63,6 +64,7 @@ public:
     void TranslateModel(glm::vec3 translation);
     void TranslateModelAndChildren(glm::vec3 translation);
     void ScaleModel(glm::vec3 scalars);
+    void ScaleCollisionBoundaries(glm::vec3 scalars);
     void ScaleModelAndChildren(glm::vec3 scalars);
     void RotateModel(float angle, glm::vec3 axis);
     void RotateModelAndChildren(float angle, glm::vec3 axis);
@@ -76,7 +78,9 @@ public:
 
     /* Drawing */
     void BindUniforms(void);
+    void BindUniforms(ShaderProgram* shader);
     void Draw(void);
+    void Draw(ShaderProgram* shader);
 
     /* Toggle */
     void ToggleModelTexture(void);
