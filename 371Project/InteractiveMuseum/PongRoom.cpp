@@ -44,13 +44,6 @@ public:
     int spotlightCount;
     float lightNearPlane, lightFarPlane;
 
-    // Debug
-    Primitive prim = Primitive();
-    Geometry* debugCube = prim.Cube();
-    Geometry* debugPlane = prim.Plane();
-    float debugAngle = 0.0f;
-    glm::mat4 rotation, nearCube, middleCube, farCube, debugFloor;
-
     /* Interaction */
     glm::vec3 ballInitialPosition;
     float ballRadius = 3.0f * Unit;
@@ -65,9 +58,15 @@ public:
     Model* mAxisX, * mAxisY, * mAxisZ;
     Model* mFloor, * mCeiling, * mLeftWall, * mRightWall, * mFarWall, * mNearWall;
     Model* mPongBall;
-    Model* mBlock1, *mBlock2, *mBlock3, *mBlock4, *mBlock5;
+    Model* mBlock1, *mBlock2, *mBlock3, *mBlock4, *mBlock5, *mBlock6;
     std::vector<Model*> obstacles;
 
+    // Debug
+    Primitive prim = Primitive();
+    Geometry* debugCube = prim.Cube();
+    Geometry* debugPlane = prim.Plane();
+    float debugAngle = 0.0f;
+    glm::mat4 rotation, nearCube, middleCube, farCube, debugFloor;
 
     /* Loading Shaders
     --------------------------------*/
@@ -79,7 +78,6 @@ public:
     --------------------------------*/
     Texture* ceiling_texture = new Texture("./res/textures/white-painted-ceiling-texture.jpg");
     Texture* artifact_arm_texture = new Texture("./res/textures/bark.jpg");
-
 
     /* Constructor */
     PongRoomScene(float windowWidth, float windowHeight)
@@ -98,161 +96,161 @@ public:
         SetCameraPerspective(70.0f, window_width / window_height, 0.001 * Unit, 200 * Unit);
         SetCameraBoundingBox(room_bound_neg_x, room_bound_pos_x, room_bound_neg_z, room_bound_pos_z);
 
-        prepareDepthCubemap();
-
-        // To make an omnidirectional shadow map we will create 6 spotlights
-        spotlightCount = 6;
-        // Each spotlight will face along one of the cardinal axes (postive and negative)
-        lightNearPlane = ballRadius; // Near plane to minimum, far plane to longest distance across room.
-        lightFarPlane = 25.0f;//sqrtf(room_width * room_width + room_width * room_width + room_height * room_height);
-        spotlightPerspective = glm::perspective(glm::radians(90.0f), shadow_width / shadow_height, lightNearPlane, lightFarPlane);
-
-        // Set the far plane value for the depth shader
-        glUseProgram(mDepthCubemap.shader->id);
-        glUniform1i(glGetUniformLocation(mDepthCubemap.shader->id, "spotlight_count"), spotlightCount); // For geometry shader
-        glUniform1f(glGetUniformLocation(mDepthCubemap.shader->id, "far_plane"), lightFarPlane); // For vertex shader
-
-
-        // Clear the textures inside the the point light shader, set far_plane while we're at it
-        glUseProgram(point_light_shader->id);
-        glUniform1i(glGetUniformLocation(point_light_shader->id, "u_texture"), 0);
-        glUniform1i(glGetUniformLocation(point_light_shader->id, "shadow_map"), 1);
-        glUniform1f(glGetUniformLocation(point_light_shader->id, "far_plane"), lightFarPlane);
-
-
         ballInitialPosition = glm::vec3(0.0f, ballRadius + Unit, 0.0f);
         ballSpeed = 4.0f;
         ballMoveDir = glm::vec3(0.0f);
-
         lightPosition = ballInitialPosition;
 
-        ///* Lighting */
-        //SetSceneLightPositionOne(glm::vec3(0.0f, (room_height + 5) * Unit, 0.0f));
-        //SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
-        //SetSceneLightColourOne(glm::vec4(0.7f, 0.1f, 0.1f, 1.0f));
-        //SetSceneLightCutoffOne(glm::cos(glm::radians(180.0f)));
-        //SetSceneLightSwitchOne(true);
+        /* Prepare for shadow depth map */
+        {
+            prepareDepthCubemap();
+            // To make an omnidirectional shadow map we will create 6 spotlights
+            spotlightCount = 6;
+            // Each spotlight will face along one of the cardinal axes (postive and negative)
+            lightNearPlane = ballRadius; // Near plane to minimum possible
+            lightFarPlane = 25.0f;//sqrtf(room_width * room_width + room_width * room_width + room_height * room_height);
+            spotlightPerspective = glm::perspective(glm::radians(90.0f), shadow_width / shadow_height, lightNearPlane, lightFarPlane);
 
-        // SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));
-        // SetSceneLightDirectionTwo(glm::vec3(0.0f, -1.0f, 0.0f));
-        // SetSceneLightColourTwo(glm::vec4(0.1f, 0.7f, 0.1f, 1.0f));
-        // SetSceneLightCutoffTwo(glm::cos(glm::radians(12.5f)));
-        // SetSceneLightSwitchTwo(true);
+            /* Uniforms that only need to be set once */
+            // Set the far plane value for the depth shader
+            glUseProgram(mDepthCubemap.shader->id);
+            glUniform1i(glGetUniformLocation(mDepthCubemap.shader->id, "spotlight_count"), spotlightCount); // For geometry shader
+            glUniform1f(glGetUniformLocation(mDepthCubemap.shader->id, "far_plane"), lightFarPlane); // For vertex shader
 
-        // SetSceneLightPositionThree(glm::vec3(-45*Unit, 45*Unit, 0.0f));
-        // SetSceneLightDirectionThree(glm::vec3(0.0f, -1.0f, 0.0f));
-        // SetSceneLightColourThree(glm::vec4(0.1f, 0.1f, 0.7f, 1.0f));
-        // SetSceneLightCutoffThree(glm::cos(glm::radians(12.5f)));
-        // SetSceneLightSwitchThree(true);
+            // Clear the textures inside the the point light shader, set far_plane while we're at it
+            glUseProgram(point_light_shader->id);
+            glUniform1i(glGetUniformLocation(point_light_shader->id, "u_texture"), 0);
+            glUniform1i(glGetUniformLocation(point_light_shader->id, "shadow_map"), 1);
+            glUniform1f(glGetUniformLocation(point_light_shader->id, "far_plane"), lightFarPlane);
+        }
 
         /* Modelling */
-        mFloor = CreateModelPrimitive(PLANE, NULL);
-        mFloor->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
-        mFloor->TranslateModel(glm::vec3(0.0f, -0.01f, 0.0f));
-        mFloor->SetModelFragmentColour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+        {
+            // Room surfaces
+            {
+                // Floor Model
+                mFloor = CreateModelPrimitive(PLANE, NULL);
+                mFloor->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
+                mFloor->TranslateModel(glm::vec3(0.0f, -0.01f, 0.0f));
+                mFloor->SetModelFragmentColour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
 
-        // Ceiling Model
-        mCeiling = CreateModelPrimitive(PLANE, NULL);
-        mCeiling->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
-        mCeiling->RotateModel(glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mCeiling->TranslateModel(glm::vec3(0.0f, room_width - 0.01f, 0.0f));
-        mCeiling->SetModelTexture(ceiling_texture);
+                // Ceiling Model
+                mCeiling = CreateModelPrimitive(PLANE, NULL);
+                mCeiling->ScaleModel(glm::vec3(room_width, 1.0f, room_width));
+                mCeiling->RotateModel(glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                mCeiling->TranslateModel(glm::vec3(0.0f, room_width - 0.01f, 0.0f));
+                mCeiling->SetModelTexture(ceiling_texture);
 
-        // Left Wall Model
-        mLeftWall = CreateModelPrimitive(PLANE, NULL);
-        mLeftWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
-        mLeftWall->RotateModel(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mLeftWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mLeftWall->TranslateModel(glm::vec3(-room_width, room_height - 0.01f, 0.0f));
-        mLeftWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+                // Left Wall Model
+                mLeftWall = CreateModelPrimitive(PLANE, NULL);
+                mLeftWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
+                mLeftWall->RotateModel(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+                mLeftWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                mLeftWall->TranslateModel(glm::vec3(-room_width, room_height - 0.01f, 0.0f));
+                mLeftWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
 
-        // Right Wall Model
-        mRightWall = CreateModelPrimitive(PLANE, NULL);
-        mRightWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
-        mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mRightWall->TranslateModel(glm::vec3(room_width, room_height - 0.01f, 0.0f));
-        mRightWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+                // Right Wall Model
+                mRightWall = CreateModelPrimitive(PLANE, NULL);
+                mRightWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
+                mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+                mRightWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                mRightWall->TranslateModel(glm::vec3(room_width, room_height - 0.01f, 0.0f));
+                mRightWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
 
-        // Far Wall Model
-        mFarWall = CreateModelPrimitive(PLANE, NULL);
-        mFarWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
-        mFarWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mFarWall->TranslateModel(glm::vec3(0.0f, room_height - 0.01f, -room_width));
-        mFarWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+                // Far Wall Model
+                mFarWall = CreateModelPrimitive(PLANE, NULL);
+                mFarWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
+                mFarWall->RotateModel(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                mFarWall->TranslateModel(glm::vec3(0.0f, room_height - 0.01f, -room_width));
+                mFarWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
 
-        // Near Wall Model
-        mNearWall = CreateModelPrimitive(PLANE, NULL);
-        mNearWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
-        mNearWall->RotateModel(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        mNearWall->TranslateModel(glm::vec3(0.0f, room_height - 0.01f, room_width));
-        mNearWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+                // Near Wall Model
+                mNearWall = CreateModelPrimitive(PLANE, NULL);
+                mNearWall->ScaleModel(glm::vec3(room_width, 1.0f, room_height));
+                mNearWall->RotateModel(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                mNearWall->TranslateModel(glm::vec3(0.0f, room_height - 0.01f, room_width));
+                mNearWall->SetModelFragmentColour(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+            }
 
-        // Axis Models
-        /*mAxisX = CreateModelPrimitive(LINE, NULL);
-        mAxisX->SetModelRenderMode(GL_LINES);
-        mAxisX->ScaleModel(glm::vec3(1.0f));
-        mAxisX->SetModelFragmentColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+            // Axis Models
+            {
+            /*mAxisX = CreateModelPrimitive(LINE, NULL);
+            mAxisX->SetModelRenderMode(GL_LINES);
+            mAxisX->ScaleModel(glm::vec3(1.0f));
+            mAxisX->SetModelFragmentColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        mAxisY = CreateModelPrimitive(LINE, NULL);
-        mAxisY->SetModelRenderMode(GL_LINES);
-        mAxisY->ScaleModel(glm::vec3(1.0f));
-        mAxisY->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        mAxisY->SetModelFragmentColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+            mAxisY = CreateModelPrimitive(LINE, NULL);
+            mAxisY->SetModelRenderMode(GL_LINES);
+            mAxisY->ScaleModel(glm::vec3(1.0f));
+            mAxisY->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+            mAxisY->SetModelFragmentColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
-        mAxisZ = CreateModelPrimitive(LINE, NULL);
-        mAxisZ->SetModelRenderMode(GL_LINES);
-        mAxisZ->ScaleModel(glm::vec3(1.0f));
-        mAxisZ->RotateModel(glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        mAxisZ->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));*/
+            mAxisZ = CreateModelPrimitive(LINE, NULL);
+            mAxisZ->SetModelRenderMode(GL_LINES);
+            mAxisZ->ScaleModel(glm::vec3(1.0f));
+            mAxisZ->RotateModel(glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            mAxisZ->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));*/
+            }
 
-        // The ball
-        mPongBall = CreateModelPrimitive(SPHERE, NULL);
-        mPongBall->ScaleCollisionBoundaries(glm::vec3(ballRadius * 2));
-        mPongBall->ScaleModel(glm::vec3(ballRadius * 2));
-        mPongBall->TranslateModel(ballInitialPosition);
-        mPongBall->SetModelFragmentColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            // The ball // TODO would probably be best to draw this independently of DrawScene() calls
+            mPongBall = CreateModelPrimitive(SPHERE, NULL);
+            mPongBall->ScaleCollisionBoundaries(glm::vec3(ballRadius * 2));
+            mPongBall->ScaleModel(glm::vec3(ballRadius * 2));
+            mPongBall->TranslateModel(ballInitialPosition);
+            mPongBall->SetModelFragmentColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
         
-        // A block
-        mBlock1 = CreateModelPrimitive(CUBE, NULL);
-        mBlock1->ScaleCollisionBoundaries(glm::vec3(5.0f));
-        mBlock1->ScaleModel(glm::vec3(5.0f));
-        mBlock1->TranslateModel(glm::vec3(10.0f, 0.0f, -5.0f));
-        mBlock1->SetModelFragmentColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-        //mBlock1->SetModelTexture(ceiling_texture);
-        obstacles.push_back(mBlock1);
+            // Blocks
+            {
+                // A block
+                mBlock1 = CreateModelPrimitive(CUBE, NULL);
+                mBlock1->ScaleCollisionBoundaries(glm::vec3(5.0f));
+                mBlock1->ScaleModel(glm::vec3(5.0f));
+                mBlock1->TranslateModel(glm::vec3(10.0f, 0.0f, -5.0f));
+                mBlock1->SetModelFragmentColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+                //mBlock1->SetModelTexture(ceiling_texture);
+                obstacles.push_back(mBlock1);
 
-        // A block
-        mBlock2 = CreateModelPrimitive(CUBE, NULL);
-        mBlock2->ScaleCollisionBoundaries(glm::vec3(4.0f));
-        mBlock2->ScaleModel(glm::vec3(4.0f));
-        mBlock2->TranslateModel(glm::vec3(-10.0f, 10.0f, 10.0f));
-        mBlock2->SetModelFragmentColour(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
-        obstacles.push_back(mBlock2);
+                // A block
+                mBlock2 = CreateModelPrimitive(CUBE, NULL);
+                mBlock2->ScaleCollisionBoundaries(glm::vec3(4.0f));
+                mBlock2->ScaleModel(glm::vec3(4.0f));
+                mBlock2->TranslateModel(glm::vec3(-10.0f, 10.0f, 10.0f));
+                mBlock2->SetModelFragmentColour(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+                obstacles.push_back(mBlock2);
 
-        // A block
-        mBlock3 = CreateModelPrimitive(CUBE, NULL);
-        mBlock3->ScaleCollisionBoundaries(glm::vec3(1.0f));
-        mBlock3->ScaleModel(glm::vec3(1.0f));
-        mBlock3->TranslateModel(glm::vec3(-5.0f, 15.0f, -25.0f));
-        mBlock3->SetModelFragmentColour(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-        obstacles.push_back(mBlock3);
+                // A block
+                mBlock3 = CreateModelPrimitive(CUBE, NULL);
+                mBlock3->ScaleCollisionBoundaries(glm::vec3(1.0f));
+                mBlock3->ScaleModel(glm::vec3(1.0f));
+                mBlock3->TranslateModel(glm::vec3(-5.0f, 15.0f, -25.0f));
+                mBlock3->SetModelFragmentColour(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+                obstacles.push_back(mBlock3);
 
-        // A block
-        mBlock4 = CreateModelPrimitive(CUBE, NULL);
-        mBlock4->ScaleCollisionBoundaries(glm::vec3(2.0f));
-        mBlock4->ScaleModel(glm::vec3(2.0f));
-        mBlock4->TranslateModel(glm::vec3(25.0f, 7.5f, 5.0f));
-        mBlock4->SetModelFragmentColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-        obstacles.push_back(mBlock4);
+                // A block
+                mBlock4 = CreateModelPrimitive(CUBE, NULL);
+                mBlock4->ScaleCollisionBoundaries(glm::vec3(2.0f));
+                mBlock4->ScaleModel(glm::vec3(2.0f));
+                mBlock4->TranslateModel(glm::vec3(25.0f, 7.5f, 5.0f));
+                mBlock4->SetModelFragmentColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+                obstacles.push_back(mBlock4);
 
-        // A block
-        mBlock5 = CreateModelPrimitive(CUBE, NULL);
-        mBlock5->ScaleCollisionBoundaries(glm::vec3(3.0f));
-        mBlock5->ScaleModel(glm::vec3(3.0f));
-        mBlock5->TranslateModel(glm::vec3(-15.0f, 4.0f, -2.0f));
-        mBlock5->SetModelFragmentColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        obstacles.push_back(mBlock5);
+                // A block
+                mBlock5 = CreateModelPrimitive(CUBE, NULL);
+                mBlock5->ScaleCollisionBoundaries(glm::vec3(3.0f));
+                mBlock5->ScaleModel(glm::vec3(3.0f));
+                mBlock5->TranslateModel(glm::vec3(-15.0f, 4.0f, -2.0f));
+                mBlock5->SetModelFragmentColour(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+                obstacles.push_back(mBlock5);
+
+                // A block
+                mBlock6 = CreateModelPrimitive(CUBE, NULL);
+                mBlock6->ScaleCollisionBoundaries(glm::vec3(2.5f));
+                mBlock6->ScaleModel(glm::vec3(2.5f));
+                mBlock6->TranslateModel(glm::vec3(0.0f, room_height * 2 - 2.52f, 0.0f));
+                mBlock6->SetModelFragmentColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+                obstacles.push_back(mBlock6);
+            }
+        }
     }
 
     /* This is called once per frame */
@@ -263,61 +261,61 @@ public:
         glm::vec3 ballPosition = mPongBall->GetModelPosition();
 
         // Collision
-#if true       
-        rebound += 1.0f;
-
-        if (rebound >= 10.0f)
         {
-            float leftWall = mLeftWall->GetModelPosition().x;
-            float rightWall = mRightWall->GetModelPosition().x;
-            float ceiling = mCeiling->GetModelPosition().y;
-            float floor = mFloor->GetModelPosition().y;
-            float farWall = mFarWall->GetModelPosition().z;
-            float nearWall = mNearWall->GetModelPosition().z;
+            rebound += 1.0f;
 
-            if (ballPosition.x - leftWall <= ballRadius ||
-                rightWall - ballPosition.x <= ballRadius) {
-                ballMoveDir.x *= -1;
-                rebound = 0.0f;
-            }
-            if (ballPosition.y - floor <= ballRadius ||
-                ceiling - ballPosition.y <= ballRadius) {
-                ballMoveDir.y *= -1;
-                rebound = 0.0f;
-            }
-            if (ballPosition.z - farWall <= ballRadius ||
-                nearWall - ballPosition.z <= ballRadius)
+            if (rebound >= 10.0f)
             {
-                std::cout << "ball radius " << ballRadius << std::endl;
-                std::cout << "ball pos " << ballPosition.x << "\t" << ballPosition.y << "\t" << ballPosition.z << "\t" << std::endl;
-                //std::cout << "left" << ballPosition.x - leftWall << std::endl;
-                //std::cout << "right" << rightWall - ballPosition.x << std::endl;
-                //std::cout << "floor" << ballPosition.y - floor << std::endl;
-                //std::cout << "ceiling" << ceiling - ballPosition.y << std::endl;
-                //std::cout << "far" << ballPosition.z - farWall << std::endl;
-                //std::cout << "near" << nearWall - ballPosition.z << std::endl;
+                float leftWall = mLeftWall->GetModelPosition().x;
+                float rightWall = mRightWall->GetModelPosition().x;
+                float ceiling = mCeiling->GetModelPosition().y;
+                float floor = mFloor->GetModelPosition().y;
+                float farWall = mFarWall->GetModelPosition().z;
+                float nearWall = mNearWall->GetModelPosition().z;
 
-                ballMoveDir.z *= -1;
-                rebound = 0.0f;
-            }
+                if (ballPosition.x - leftWall <= ballRadius ||
+                    rightWall - ballPosition.x <= ballRadius) {
+                    ballMoveDir.x *= -1;
+                    rebound = 0.0f;
+                }
+                if (ballPosition.y - floor <= ballRadius ||
+                    ceiling - ballPosition.y <= ballRadius) {
+                    ballMoveDir.y *= -1;
+                    rebound = 0.0f;
+                }
+                if (ballPosition.z - farWall <= ballRadius ||
+                    nearWall - ballPosition.z <= ballRadius)
+                {
+                    std::cout << "ball radius " << ballRadius << std::endl;
+                    std::cout << "ball pos " << ballPosition.x << "\t" << ballPosition.y << "\t" << ballPosition.z << "\t" << std::endl;
+                    //std::cout << "left" << ballPosition.x - leftWall << std::endl;
+                    //std::cout << "right" << rightWall - ballPosition.x << std::endl;
+                    //std::cout << "floor" << ballPosition.y - floor << std::endl;
+                    //std::cout << "ceiling" << ceiling - ballPosition.y << std::endl;
+                    //std::cout << "far" << ballPosition.z - farWall << std::endl;
+                    //std::cout << "near" << nearWall - ballPosition.z << std::endl;
 
-            for (Model* m : obstacles) {
-                if (checkObstacles) {
-                    if (SphereRectCollision(mPongBall, m)) {
-                            rebound = 0.0f;
-                            //ballMoveDir = glm::vec3(0);
-                            ballMoveDir = -ballMoveDir;
-                        std::cout << "the cube" << std::endl;
-                    }
+                    ballMoveDir.z *= -1;
+                    rebound = 0.0f;
                 }
 
+                for (Model* m : obstacles) {
+                    if (checkObstacles) {
+                        if (SphereRectCollision(mPongBall, m)) {
+                                rebound = 0.0f;
+                                //ballMoveDir = glm::vec3(0);
+                                ballMoveDir = -ballMoveDir;
+                            std::cout << "the cube" << std::endl;
+                        }
+                    }
+
+                }
             }
         }
-#endif
 
         // Shadows
         {
-            lightPosition = ballPosition;// ballPosition;
+            lightPosition = ballPosition;
             std::vector<glm::mat4> spotlightViewProjections;
             spotlightViewProjections.push_back(spotlightPerspective *
                 glm::lookAt(lightPosition, lightPosition + glm::vec3( 1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0))); // Right
@@ -341,33 +339,23 @@ public:
                 glUniformMatrix4fv(glGetUniformLocation(mDepthCubemap.shader->id, uniformName.c_str()), 1, GL_FALSE, &viewProjection[0][0]);
             }
 
-            glUseProgram(point_light_shader->id);
-            glUniform3fv(glGetUniformLocation(point_light_shader->id, "light_position"), 1, &(lightPosition[0]));
-            glUniform3fv(glGetUniformLocation(point_light_shader->id, "camera_position"), 1, &(this->camera_position[0]));
-
             glViewport(0, 0, (unsigned int)shadow_width, (unsigned int)shadow_height);
             glBindFramebuffer(GL_FRAMEBUFFER, mDepthCubemap.FBO); // Use our depth framebuffer
             glClear(GL_DEPTH_BUFFER_BIT);
+
             glDisable(GL_CULL_FACE); // Disable face culling to reduce Peter Panning
-
             DrawScene(mDepthCubemap.shader); // Draw the scene from the light source's perspective
-            //shadowDebug(mDepthCubemap.shader, dt);
-
             glEnable(GL_CULL_FACE);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0); // Back to the default framebuffer
             glViewport(0, 0, window_width, window_height);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            glActiveTexture(GL_TEXTURE1); // Bind the depth map texture so that the main shader can use it to place shadows
-            glBindTexture(GL_TEXTURE_CUBE_MAP, mDepthCubemap.texture);
         }
 
         glLineWidth(5.0f); // To make the axes more visible
+        BindPongRoomUniforms();
         DrawScene(point_light_shader); // Draw the scene using the main shader
         glLineWidth(1.0f);
-
-        //shadowDebug(point_light_shader, dt);
     }
 
     void shadowDebug(ShaderProgram* shader, float dt) {
@@ -539,5 +527,15 @@ public:
         /* Assign the shader we'll use to generate the depth map */
         /* ---------------- */
         mDepthCubemap.shader = depth_cubemap_shader;
+    }
+
+    void BindPongRoomUniforms() {
+        glUseProgram(point_light_shader->id);
+        glUniform3fv(glGetUniformLocation(point_light_shader->id, "light_position"), 1, &(lightPosition[0]));
+
+        glActiveTexture(GL_TEXTURE1); // Bind the depth map texture so that the main shader can use it to place shadows
+        glBindTexture(GL_TEXTURE_CUBE_MAP, mDepthCubemap.texture);
+
+        glUseProgram(0);
     }
 };

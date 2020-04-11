@@ -58,8 +58,8 @@ void Scene::DrawScene(ShaderProgram* shader)
         uniformLocation = glGetUniformLocation(shader->id, "projection_matrix");
         glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &GetCameraProjectionMatrix()[0][0]);
 
-        /*uniformLocation = glGetUniformLocation(shader->id, "camera_position");
-        glUniform4fv(uniformLocation, 1, &GetCameraPosition()[0]);*/
+        uniformLocation = glGetUniformLocation(shader->id, "camera_position");
+        glUniform4fv(uniformLocation, 1, &GetCameraPosition()[0]);
     }
 
     for (unsigned int i = 0; i < models.size(); i++)

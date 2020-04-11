@@ -96,7 +96,7 @@ int main()
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
     PongRoom->Initialize();
-    currentScene = ArtifactRoom;
+    currentScene = PongRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
