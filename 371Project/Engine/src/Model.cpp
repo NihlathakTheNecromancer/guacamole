@@ -210,23 +210,44 @@ void Model::SetModelFragmentColour(glm::vec4 c)
     fragment_colour = c;
 }
 
-void Model::BindUniforms(void)
+void Model::BindUniforms(void) {
+    BindUniforms(model_shader_program);
+}
+
+void Model::BindUniforms(ShaderProgram* shader)
 {
     unsigned int uniformLocation; 
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "model_matrix");
+    // These should be scene properties, they aren't specific to the model
+    {
+        uniformLocation = glGetUniformLocation(shader->id, "view_matrix");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraViewMatrix()[0][0]);
+
+        uniformLocation = glGetUniformLocation(shader->id, "projection_matrix");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraProjectionMatrix()[0][0]);
+
+        /*uniformLocation = glGetUniformLocation(shader->id, "camera_position");
+        glUniform4fv(uniformLocation, 1, &scene->GetCameraPosition()[0]);*/
+    }
+
+    uniformLocation = glGetUniformLocation(shader->id, "model_matrix");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &model_matrix[0][0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "view_matrix");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraViewMatrix()[0][0]);
+    uniformLocation = glGetUniformLocation(shader->id, "fragment_colour");
+    glUniform4fv(uniformLocation, 1, &fragment_colour[0]);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "projection_matrix");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &scene->GetCameraProjectionMatrix()[0][0]);
+    uniformLocation = glGetUniformLocation(shader->id, "is_textured");
+    glUniform1i(uniformLocation, textures_enabled);
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "camera_position");
-    glUniform4fv(uniformLocation, 1, &scene->GetCameraPosition()[0]);
+    if (textures_enabled)
+    {
+        uniformLocation = glGetUniformLocation(shader->id, "u_texture");
+        glUniform1i(uniformLocation, texture->GetTextureSlot());
+    }
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_one");
+    // TODO These are so specific it hurts me
+    {
+    /*uniformLocation = glGetUniformLocation(model_shader_program->id, "light_position_one");
     glUniform3fv(uniformLocation, 1, &scene->GetSceneLightPositionOne()[0]);
 
     uniformLocation = glGetUniformLocation(model_shader_program->id, "light_direction_one");
@@ -271,16 +292,7 @@ void Model::BindUniforms(void)
     uniformLocation = glGetUniformLocation(model_shader_program->id, "light_switch_three");
     glUniform1i(uniformLocation, scene->GetSceneLightSwitchThree());
 
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "fragment_colour");
-    glUniform4fv(uniformLocation, 1, &fragment_colour[0]);
-
-    uniformLocation = glGetUniformLocation(model_shader_program->id, "is_textured");
-    glUniform1i(uniformLocation, textures_enabled);
-    
-    if(textures_enabled)
-    {
-        uniformLocation = glGetUniformLocation(model_shader_program->id, "u_texture");
-        glUniform1i(uniformLocation, texture->GetTextureSlot());
+    */
     }
 }
 
@@ -291,9 +303,9 @@ void Model::Draw() {
 void Model::Draw(ShaderProgram* shader)
 {
     glUseProgram(shader->id);
-    if(textures_enabled) texture->Bind(1);
+    if(textures_enabled) texture->Bind(0);
     if(transparency_enabled) glEnable(GL_BLEND);
-    BindUniforms();
+    BindUniforms(shader);
 
     glBindVertexArray(geometry->vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry->ibo);

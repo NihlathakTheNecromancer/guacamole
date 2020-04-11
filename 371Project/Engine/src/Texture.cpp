@@ -32,6 +32,7 @@ Texture::~Texture()
 void Texture::Bind(unsigned int slot)
 {
     texture_slot = slot;
+    // TODO this could be dangerous...
     glActiveTexture(GL_TEXTURE0 + texture_slot);
     glBindTexture(GL_TEXTURE_2D, id);
 }

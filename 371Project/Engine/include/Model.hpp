@@ -78,6 +78,7 @@ public:
 
     /* Drawing */
     void BindUniforms(void);
+    void BindUniforms(ShaderProgram* shader);
     void Draw(void);
     void Draw(ShaderProgram* shader);
 
