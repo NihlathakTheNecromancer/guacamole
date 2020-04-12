@@ -33,8 +33,8 @@ float window_height = 768.0f;
 bool bFirstMouse = true;
 bool bLockCursor = true;
 bool bInitMouse = true;
-float fCameraSensitivity = 0.05;
-float fCameraMovementSpeed = 10.0f;
+float fCameraSensitivity = 0.02;
+float fCameraMovementSpeed = 5.0f;
 float fCameraZoomSpeed = 0.1f;
 
 Scene* currentScene;
@@ -99,7 +99,7 @@ int main()
     BlackHoleRoom->Initialize();
     PongRoom->Initialize();
     ReflectionsRoom->Initialize();
-    currentScene = ReflectionsRoom;
+    currentScene = ArtifactRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
@@ -111,6 +111,23 @@ int main()
 		dt = glfwGetTime() - lastFrameTime;
 		lastFrameTime += dt;
 
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        {
+            currentScene = ArtifactRoom;
+        }
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        {
+            currentScene = BlackHoleRoom;
+        }
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        {
+            currentScene = PongRoom;
+        }
+        if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        {
+            currentScene = ReflectionsRoom;
+        }
+        
         currentScene->InputController(window);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -120,6 +137,7 @@ int main()
         /* Input */
         CameraController(window, currentScene, dt);
         currentScene->UpdateCameraView();
+
 
 		// End Frame
 		glfwSwapBuffers(window);
