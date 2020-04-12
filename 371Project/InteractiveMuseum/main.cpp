@@ -15,6 +15,7 @@
 #include "ArtifactRoomScene.cpp"
 #include "BlackHoleRoom.cpp"
 #include "PongRoom.cpp"
+#include "Reflections.cpp"
 
 
 // Function prototypes
@@ -93,10 +94,12 @@ int main()
     ArtifactRoomScene* ArtifactRoom = new ArtifactRoomScene(window_width, window_height);
     BlackHoleRoomScene* BlackHoleRoom = new BlackHoleRoomScene(window_width, window_height);
     PongRoomScene* PongRoom = new PongRoomScene(window_width, window_height);
+    ReflectionsRoomScene* ReflectionsRoom = new ReflectionsRoomScene(window_width, window_height);
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
     PongRoom->Initialize();
-    currentScene = PongRoom;
+    ReflectionsRoom->Initialize();
+    currentScene = ReflectionsRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
