@@ -91,6 +91,7 @@ public:
     /* This initializes the scene */
     void inline Initialize(void)
     {
+        SetCameraFlying(true);
         SetSceneShaderProgram(point_light_shader);
         SetCameraView(glm::vec3(0.0f, 2 * Unit, 25 * Unit), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         SetCameraPerspective(70.0f, window_width / window_height, 0.001 * Unit, 200 * Unit);

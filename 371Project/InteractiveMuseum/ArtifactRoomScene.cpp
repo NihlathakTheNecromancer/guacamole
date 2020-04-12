@@ -22,8 +22,13 @@ public:
     bool bArtifact2Enabled = false;
     bool bArtifact3Enabled = false;
     bool bFinalState       = false;
+    bool bDelayState       = false;
     float fInteractionLength = 2*Unit;
     float timer0 = 0.0f;
+    float red_shift = 0.0f;
+    float green_shift = 0.0f;
+    float sphere_rotation_speed = 10.0f;
+    float blue_shift = glm::sin(glm::radians(180.0f));
 
     /* Models */
     Model *mGround;
@@ -39,6 +44,12 @@ public:
     Model *mPedestal3Foot, *mPedestal3Column, *mPedestal3Top;
     Model *mArtifact3Arm0, *mArtifact3Arm1, *mArtifact3Arm2,*mArtifact3Arm3, *mArtifact3Sphere;
 
+    /* Lighting */
+    glm::vec3    light_position;                // Position of scene light One
+    glm::vec3    light_direction;               // Direction of scene light One
+    glm::vec4    light_colour = glm::vec4(1.0f);// Colour of scene light One
+    float        light_cutoff = glm::cos(glm::radians(180.0f));
+    bool         light_switch = false;
 
     /* Loading Shaders 
     --------------------------------*/
@@ -66,11 +77,11 @@ public:
         SetCameraBoundingBox(room_bound_neg_x, room_bound_pos_x, room_bound_neg_z, room_bound_pos_z);
 
         /* Lighting */
-        SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, 0.0f));
-        SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
+        SetSceneLightPosition(glm::vec3(0.0f, 45*Unit, 0.0f));
+        SetSceneLightDirection(glm::vec3(0.0f, -1.0f, 0.0f));
         //SetSceneLightColourOne(glm::vec4(0.7f, 0.1f, 0.1f, 1.0f));
-        SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
-        SetSceneLightSwitchOne(true);
+        SetSceneLightCutoff(glm::cos(glm::radians(12.5f)));
+        SetSceneLightSwitch(true);
 
         // SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));
         // SetSceneLightDirectionTwo(glm::vec3(0.0f, -1.0f, 0.0f));
@@ -358,20 +369,45 @@ public:
     /* This is called once per frame */
     void inline Update(float dt)
     {
-        if(bFinalState)
+        if(bDelayState)
         {
             timer0 += dt;
-            if( timer0 >= 2.0f)
+            if( timer0 >= 1.0f)
             {
-                SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, 0.0f));
-                SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
-                SetSceneLightColourOne(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-                SetSceneLightCutoffOne(glm::cos(glm::radians(25.0f)));
-                SetSceneLightSwitchTwo(false);
-                SetSceneLightSwitchThree(false);
-                bFinalState = false;
+                SetSceneLightPosition(glm::vec3(0.0f, 45*Unit, 0.0f));
+                SetSceneLightDirection(glm::vec3(0.0f, -1.0f, 0.0f));
+                SetSceneLightColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                SetSceneLightCutoff(glm::cos(glm::radians(12.5f)));
+                SetSceneLightSwitch(true);
+                bDelayState = false;
+
+                /* Set Up Final State */
+                mArtifact1Sphere->TranslateModel(-mArtifact1Sphere->GetModelPosition());
+                mArtifact1Sphere->TranslateModel(glm::vec3(8*Unit, mArtifact0Sphere->GetModelPosition().y, 0.0f));
+                mArtifact1Sphere->RotateModel(glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+                mArtifact2Sphere->TranslateModel(-mArtifact2Sphere->GetModelPosition());
+                mArtifact2Sphere->TranslateModel(glm::vec3(8*Unit, mArtifact0Sphere->GetModelPosition().y, 0.0f));
+                mArtifact2Sphere->RotateModel(glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+                mArtifact3Sphere->TranslateModel(-mArtifact3Sphere->GetModelPosition());
+                mArtifact3Sphere->TranslateModel(glm::vec3(8*Unit, mArtifact0Sphere->GetModelPosition().y, 0.0f));
+                mArtifact3Sphere->RotateModel(glm::radians(-135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+                bFinalState = true;
             }
         }
+        if(bFinalState)
+        {
+            red_shift += dt;
+            green_shift += dt;
+            blue_shift -= dt;
+            mArtifact1Sphere->RotateModel(glm::radians(dt*sphere_rotation_speed), glm::vec3(0.0f, 1.0f, 0.0f));
+            mArtifact2Sphere->RotateModel(glm::radians(dt*sphere_rotation_speed), glm::vec3(0.0f, 1.0f, 0.0f));
+            mArtifact3Sphere->RotateModel(glm::radians(dt*sphere_rotation_speed), glm::vec3(0.0f, 1.0f, 0.0f));
+            mArtifact0Sphere->SetModelFragmentColour(glm::vec4(glm::sin(red_shift), glm::cos(green_shift), glm::sin(blue_shift), 0.6f));
+        }
+
         BindArtifactRoomUniforms();
         DrawScene();
     }
@@ -395,51 +431,34 @@ public:
             /* Calculate distances to artifacts */
             if(glm::length(mArtifact0Sphere->GetModelPosition() - GetCameraPosition()) <= fInteractionLength && !bArtifact0Enabled)
             {
-                bArtifact0Enabled = true;
-                
-                SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, -45*Unit));
-                SetSceneLightDirectionOne(glm::vec3(0.0f, -1.0f, 0.0f));
-                SetSceneLightColourOne(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-                SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
-                SetSceneLightSwitchOne(true);
-
-                SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));
-                SetSceneLightDirectionTwo(glm::vec3(0.0f, -1.0f, 0.0f));
-                SetSceneLightColourTwo(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-                SetSceneLightCutoffTwo(glm::cos(glm::radians(12.5f)));
-                SetSceneLightSwitchTwo(true);
-
-                SetSceneLightPositionThree(glm::vec3(-45*Unit, 45*Unit, 0.0f));
-                SetSceneLightDirectionThree(glm::vec3(0.0f, -1.0f, 0.0f));
-                SetSceneLightColourThree(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-                SetSceneLightCutoffThree(glm::cos(glm::radians(12.5f)));
-                SetSceneLightSwitchThree(true);
+                bArtifact0Enabled = true;                
+                SetSceneLightPosition(glm::vec3(-45*Unit, 45*Unit, 0.0f));
+                SetSceneLightColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+                SetSceneLightCutoff(glm::cos(glm::radians(12.5f)));
 
             }
             if(glm::length(mArtifact1Sphere->GetModelPosition() - GetCameraPosition()) <= fInteractionLength && bArtifact0Enabled && !bArtifact1Enabled)
             {
                 bArtifact1Enabled = true;
-                SetSceneLightPositionThree(glm::vec3(-45*Unit, 45*Unit, 0.0f));
-                SetSceneLightColourThree(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-                SetSceneLightCutoffThree(glm::cos(glm::radians(12.5f)));
+                SetSceneLightPosition(glm::vec3(0.0f, 45*Unit, -45*Unit));
+                SetSceneLightColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+                SetSceneLightCutoff(glm::cos(glm::radians(12.5f)));
             }
             if(glm::length(mArtifact2Sphere->GetModelPosition() - GetCameraPosition()) <= fInteractionLength && bArtifact0Enabled && !bArtifact2Enabled)
             {
                 bArtifact2Enabled = true;
-                SetSceneLightPositionTwo(glm::vec3(45*Unit, 45*Unit, 0.0f));
-                SetSceneLightColourTwo(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-                SetSceneLightCutoffTwo(glm::cos(glm::radians(12.5f)));
+                SetSceneLightSwitch(false);
             }
             if(glm::length(mArtifact3Sphere->GetModelPosition() - GetCameraPosition()) <= fInteractionLength && bArtifact0Enabled && !bArtifact3Enabled) 
             {
                 bArtifact3Enabled = true;
-                SetSceneLightPositionOne(glm::vec3(0.0f, 45*Unit, -45*Unit));
-                SetSceneLightColourOne(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-                SetSceneLightCutoffOne(glm::cos(glm::radians(12.5f)));
+                SetSceneLightPosition(glm::vec3(45*Unit, 45*Unit, 0.0f));
+                SetSceneLightColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+                SetSceneLightCutoff(glm::cos(glm::radians(12.5f)));
             }
             if( bArtifact0Enabled && bArtifact1Enabled && bArtifact2Enabled && bArtifact3Enabled)
             {
-                bFinalState = true;
+                bDelayState = true;
             }
         }
     }
@@ -448,51 +467,33 @@ public:
         glUseProgram(scene_shader->id);
         unsigned int uniformLocation;
 
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_position_one");
-        glUniform3fv(uniformLocation, 1, &GetSceneLightPositionOne()[0]);
+        uniformLocation = glGetUniformLocation(scene_shader->id, "light_position");
+        glUniform3fv(uniformLocation, 1, &GetSceneLightPosition()[0]);
 
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_direction_one");
-        glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionOne()[0]);
+        uniformLocation = glGetUniformLocation(scene_shader->id, "light_direction");
+        glUniform3fv(uniformLocation, 1, &GetSceneLightDirection()[0]);
 
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_colour_one");
-        glUniform4fv(uniformLocation, 1, &GetSceneLightColourOne()[0]);
+        uniformLocation = glGetUniformLocation(scene_shader->id, "light_colour");
+        glUniform4fv(uniformLocation, 1, &GetSceneLightColour()[0]);
 
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_cutoff_one");
-        glUniform1f(uniformLocation, GetSceneLightCutoffOne());
+        uniformLocation = glGetUniformLocation(scene_shader->id, "light_cutoff");
+        glUniform1f(uniformLocation, GetSceneLightCutoff());
 
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_switch_one");
-        glUniform1i(uniformLocation, GetSceneLightSwitchOne());
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_position_two");
-        glUniform3fv(uniformLocation, 1, &GetSceneLightPositionTwo()[0]);
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_direction_two");
-        glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionTwo()[0]);
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_colour_two");
-        glUniform4fv(uniformLocation, 1, &GetSceneLightColourTwo()[0]);
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_cutoff_two");
-        glUniform1f(uniformLocation, GetSceneLightCutoffTwo());
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_switch_two");
-        glUniform1i(uniformLocation, GetSceneLightSwitchTwo());
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_position_three");
-        glUniform3fv(uniformLocation, 1, &GetSceneLightPositionThree()[0]);
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_direction_three");
-        glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionThree()[0]);
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_colour_three");
-        glUniform4fv(uniformLocation, 1, &GetSceneLightColourThree()[0]);
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_cutoff_three");
-        glUniform1f(uniformLocation, GetSceneLightCutoffThree());
-
-        uniformLocation = glGetUniformLocation(scene_shader->id, "light_switch_three");
-        glUniform1i(uniformLocation, GetSceneLightSwitchThree());
+        uniformLocation = glGetUniformLocation(scene_shader->id, "light_switch");
+        glUniform1i(uniformLocation, GetSceneLightSwitch());
 
         glUseProgram(0);
     }
+
+    /* Lighting */
+    glm::vec3   inline  GetSceneLightPosition(void){ return light_position;}
+    glm::vec3   inline  GetSceneLightDirection(void){ return light_direction;}
+    glm::vec4   inline  GetSceneLightColour(void){ return light_colour;}
+    float       inline  GetSceneLightCutoff(void){ return light_cutoff;}
+    bool        inline  GetSceneLightSwitch(void){ return light_switch;}
+    void        inline  SetSceneLightPosition(glm::vec3 position){ light_position = position;}
+    void        inline  SetSceneLightCutoff(float cutoff){ light_cutoff = cutoff;}
+    void        inline  SetSceneLightDirection(glm::vec3 dir){ light_direction = dir;}
+    void        inline  SetSceneLightSwitch(bool isOn){ light_switch = isOn;}
+    void        inline  SetSceneLightColour(glm::vec4 colour){ light_colour = colour;}
 };

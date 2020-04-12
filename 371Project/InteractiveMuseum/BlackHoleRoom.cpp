@@ -29,6 +29,13 @@ public:
     Model* mAxisX, * mAxisY, * mAxisZ;
     Model* mFloor, * mBridge, * mCeiling, * mLeftWall, * mRightWall, * mFarWall, * mNearWall, * mFarWallDoor, * mNearWallDoor;
 
+    /* Lighting */
+    glm::vec3    light_position_one;                // Position of scene light One
+    glm::vec3    light_direction_one;               // Direction of scene light One
+    glm::vec4    light_colour_one = glm::vec4(1.0f);// Colour of scene light One
+    float        light_cutoff_one = glm::cos(glm::radians(180.0f));
+    bool         light_switch_one = false;
+
 
     /* Defining Shaders
     --------------------------------*/
@@ -143,6 +150,8 @@ public:
         mRightWall->RotateModel(glm::radians(spinningAngle), glm::vec3(spin));
         mNearWall->RotateModel(glm::radians(spinningAngle), glm::vec3(spin));
         mFarWall->RotateModel(glm::radians(spinningAngle), glm::vec3(spin));
+
+        BindBlackHoleRoomUniforms();
         DrawScene();
     }
 
@@ -162,4 +171,38 @@ public:
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
     }
+
+    void BindBlackHoleRoomUniforms() {
+        glUseProgram(scene_shader_program->id);
+        unsigned int uniformLocation;
+
+        uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_position_one");
+        glUniform3fv(uniformLocation, 1, &GetSceneLightPositionOne()[0]);
+
+        uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_direction_one");
+        glUniform3fv(uniformLocation, 1, &GetSceneLightDirectionOne()[0]);
+
+        uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_colour_one");
+        glUniform4fv(uniformLocation, 1, &GetSceneLightColourOne()[0]);
+
+        uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_cutoff_one");
+        glUniform1f(uniformLocation, GetSceneLightCutoffOne());
+
+        uniformLocation = glGetUniformLocation(scene_shader_program->id, "light_switch_one");
+        glUniform1i(uniformLocation, GetSceneLightSwitchOne());
+
+        glUseProgram(0);
+    }
+
+    /* Lighting */
+    glm::vec3   inline  GetSceneLightPositionOne(void){ return light_position_one;}
+    glm::vec3   inline  GetSceneLightDirectionOne(void){ return light_direction_one;}
+    glm::vec4   inline  GetSceneLightColourOne(void){ return light_colour_one;}
+    float       inline  GetSceneLightCutoffOne(void){ return light_cutoff_one;}
+    bool        inline  GetSceneLightSwitchOne(void){ return light_switch_one;}
+    void        inline  SetSceneLightPositionOne(glm::vec3 position){ light_position_one = position;}
+    void        inline  SetSceneLightCutoffOne(float cutoff){ light_cutoff_one = cutoff;}
+    void        inline  SetSceneLightDirectionOne(glm::vec3 dir){ light_direction_one = dir;}
+    void        inline  SetSceneLightSwitchOne(bool isOn){ light_switch_one = isOn;}
+    void        inline  SetSceneLightColourOne(glm::vec4 colour){ light_colour_one = colour;}
 };
