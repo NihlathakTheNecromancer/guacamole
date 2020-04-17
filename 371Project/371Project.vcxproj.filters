@@ -112,5 +112,11 @@
     <None Include="res\audio\metronome.ogg">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\shaders\reflection.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\reflection.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

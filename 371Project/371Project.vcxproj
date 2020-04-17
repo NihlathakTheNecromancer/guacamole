@@ -54,6 +54,8 @@
     <None Include="res\shaders\depthCubemap.vs" />
     <None Include="res\shaders\pointLight.fs" />
     <None Include="res\shaders\pointLight.vs" />
+    <None Include="res\shaders\reflection.fs" />
+    <None Include="res\shaders\reflection.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
