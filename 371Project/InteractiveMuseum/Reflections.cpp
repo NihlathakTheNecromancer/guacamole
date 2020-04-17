@@ -1,5 +1,6 @@
 
 /*Patrick Olivier Jean Baptiste 40003278*/
+//COMP 371
 /*Sources for sound and image see credits.txt*/
 /*tutorial from https://learnopengl.com/In-Practice/2D-Game/Audio for irrklang*/
 
