@@ -153,7 +153,6 @@ void Scene::SetCameraBoundingBox(float x_neg, float x_pos, float z_neg, float z_
 
 bool Scene::CheckBoundingBoxCollision(glm::vec3 pos, glm::vec3 dir, float distance)
 {
-    return true; 
     
     pos += distance * glm::vec3(dir.x, 0.0f, dir.z);
     if( pos.x > camera_bound_x_pos || 
