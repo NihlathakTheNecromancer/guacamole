@@ -48,6 +48,9 @@
     <ClCompile Include="InteractiveMuseum\PongRoom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InteractiveMuseum\Reflections.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\include\Geometry.hpp">
@@ -104,6 +107,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\shaders\artifact.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\audio\metronome.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\reflection.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\reflection.fs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

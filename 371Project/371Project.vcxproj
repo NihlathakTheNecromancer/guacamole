@@ -30,6 +30,7 @@
     <ClCompile Include="InteractiveMuseum\BlackHoleRoom.cpp" />
     <ClCompile Include="InteractiveMuseum\main.cpp" />
     <ClCompile Include="InteractiveMuseum\PongRoom.cpp" />
+    <ClCompile Include="InteractiveMuseum\Reflections.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\include\stb_image\stb_image.h" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Engine\include\Utilities.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\audio\metronome.ogg" />
     <None Include="res\shaders\artifact.fs" />
     <None Include="res\shaders\artifact.vs" />
     <None Include="res\shaders\default.fs" />
@@ -52,6 +54,8 @@
     <None Include="res\shaders\depthCubemap.vs" />
     <None Include="res\shaders\pointLight.fs" />
     <None Include="res\shaders\pointLight.vs" />
+    <None Include="res\shaders\reflection.fs" />
+    <None Include="res\shaders\reflection.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -125,13 +129,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\include;$(ProjectDir)ThirdParty\glfw-3.3\include;$(ProjectDir)ThirdParty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\include;$(ProjectDir)ThirdParty\glfw-3.3\include;$(ProjectDir)ThirdParty\glm;$(ProjectDir)ThirdParty\irrKlang-1.6.0/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\lib\win32;$(ProjectDir)ThirdParty\glfw-3.3\lib\win32\lib-vc2017;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\glew-2.1.0\lib\win32;$(ProjectDir)ThirdParty\glfw-3.3\lib\win32\lib-vc2017;$(ProjectDir)ThirdParty\irrKlang-1.6.0\lib\Win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

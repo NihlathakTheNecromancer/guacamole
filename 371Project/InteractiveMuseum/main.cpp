@@ -15,6 +15,7 @@
 #include "ArtifactRoomScene.cpp"
 #include "BlackHoleRoom.cpp"
 #include "PongRoom.cpp"
+#include "Reflections.cpp"
 
 
 // Function prototypes
@@ -92,10 +93,12 @@ int main()
     ArtifactRoomScene* ArtifactRoom = new ArtifactRoomScene(window_width, window_height);
     BlackHoleRoomScene* BlackHoleRoom = new BlackHoleRoomScene(window_width, window_height);
     PongRoomScene* PongRoom = new PongRoomScene(window_width, window_height);
+    ReflectionsRoomScene* ReflectionsRoom = new ReflectionsRoomScene(window_width, window_height);
     ArtifactRoom->Initialize();
     BlackHoleRoom->Initialize();
     PongRoom->Initialize();
-    currentScene = ArtifactRoom;
+    ReflectionsRoom->Initialize();
+    currentScene = ReflectionsRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
@@ -107,6 +110,23 @@ int main()
 		dt = glfwGetTime() - lastFrameTime;
 		lastFrameTime += dt;
 
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        {
+            currentScene = ArtifactRoom;
+        }
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        {
+            currentScene = BlackHoleRoom;
+        }
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        {
+            currentScene = PongRoom;
+        }
+        if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        {
+            currentScene = ReflectionsRoom;
+        }
+        
         currentScene->InputController(window);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -116,6 +136,7 @@ int main()
         /* Input */
         CameraController(window, currentScene, dt);
         currentScene->UpdateCameraView();
+
 
 		// End Frame
 		glfwSwapBuffers(window);
