@@ -98,7 +98,7 @@ int main()
     BlackHoleRoom->Initialize();
     PongRoom->Initialize();
     ReflectionsRoom->Initialize();
-    currentScene = ReflectionsRoom;
+    currentScene = ArtifactRoom;
     currentScene->SetKeyCallback(window);
 
     /* Initialize Cursor */
